@@ -1,0 +1,33 @@
+@font-face {
+  src: url("../fonts/0KDROSE-Regular.ttf") format("truetype");
+  font-family: "0KDROSE-Regular";
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  src: url("../fonts/Tagesschrift-Regular.ttf") format("truetype");
+  font-family: "Tagesschrift-Regular";
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  src: url("../fonts/Tinos-Regular.ttf") format("truetype");
+  font-family: "Tinos-Regular";
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Use example */
+.okdrose-si {
+  font-family: "0KDROSE-Regular", sans-serif;
+}
+
+.tagesschrift-en {
+  font-family: "Tagesschrift-Regular", sans-serif;
+}
+
+.tinos-en {
+  font-family: "Tinos-Regular", sans-serif;
+}
