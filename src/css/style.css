@@ -1,25 +1,36 @@
-/* CSS Variables */
 :root {
-  /* Primary, secondary, accent, and light colors for dark mode */
-  --primary: #2e5077;
-  --secondary: #4da1a9;
-  --accent: #79d7be;
-  --light: #f6f4f0;
-  --dark: #1a1a1a;
-
-  /* light mode */
-  --light-primary: #626f47;
-  --light-secondary: #a8b400;
-  --light-accent: #F0BB78;
-  --light-light: #f6f4f0;
-  --light-dark: #1a1a1a;
-
-  --danger: #f44336;
-  /* For errors */
-  --success: #4caf50;
-  /* For success messages */
+  /* Dark Theme Color Palette */
+  --bg-color: #06202B;
+  /* Dark Blue/Black */
+  --text-color: #F5EEDD;
+  /* Off-White/Beige */
+  --accent-color: #7AE2CF;
+  /* Teal Accent */
+  --button-color: #077A7D;
+  /* Dark Teal Button */
+  --card-bg-color: #0a2a3a;
+  /* Slightly Lighter Dark Blue for Cards */
+  --subtle-bg-color: #0f3b50;
+  /* Subtle background variation */
+  --heading-color: #FFFFFF;
+  /* White for main headings */
+  --text-muted-color: #a0aec0;
+  /* Gray for muted text */
 }
-@import url("https://fonts.googleapis.com/css2?family=Maname&display=swap");
+
+
+
+html {
+  scroll-padding-top: 80px;
+  /* Adjust based on nav height */
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
 
 @font-face {
   src: url("../fonts/Tagesschrift-Regular.ttf") format("truetype");
@@ -35,312 +46,413 @@
   font-style: normal;
 }
 
-/* Use example */
-.sinhala-text {
-  font-family: "Maname", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.tagesschrift-en {
+.tagesschrift {
   font-family: "Tagesschrift-Regular", sans-serif;
 }
 
-.tinos-en {
+.tinos {
   font-family: "Tinos-Regular", sans-serif;
 }
 
-/* Hero Section */
-#hero {
-  height: 100vh;
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
-  /* Parallax effect */
-  position: relative;
-}
 
-#hero::after {
-  content: "";
-  position: absolute;
+/* --- Updated Preloader --- */
+.preloader {
+  position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  /* Slightly darker overlay */
-  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-color);
+  /* Use dark background */
+  display: flex;
+  /* Keep flex for centering */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 1s ease-out, visibility 1s ease-out;
+  visibility: visible;
+  opacity: 1;
 }
 
-.hero-text {
+.preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* --- Infinity Loader Styles (Adapted from Codepen) --- */
+.infinityChrome,
+.infinity {
+  width: 120px;
+  height: 60px;
   position: relative;
-  z-index: 10;
+  /* Keep relative for positioning children */
 }
 
-#canvasContainer {
-  /* For Three.js */
+.infinityChrome div,
+.infinity div,
+.infinityChrome span,
+.infinity span {
+  /* Added span selectors */
+  position: absolute;
+}
+
+/* Chrome version styles */
+.infinityChrome div {
+  width: 20px;
+  height: 20px;
+  background: var(--accent-color);
+  /* Use accent color */
+  border-radius: 50%;
+  animation: move 4s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  filter: url(#goo);
+  /* Referencing the SVG filter */
+  offset-path: path('M60,30 C60,46.5685425 46.5685425,60 30,60 C13.4314575,60 0,46.5685425 0,30 C0,13.4314575 13.4314575,0 30,0 C46.5685425,0 60,13.4314575 60,30 Z M60,30 C60,46.5685425 73.4314575,60 90,60 C106.568542,60 120,46.5685425 120,30 C120,13.4314575 106.568542,0 90,0 C73.4314575,0 60,13.4314575 60,30 Z');
+}
+
+.infinityChrome div:nth-child(2) {
+  animation-delay: -2s;
+}
+
+.infinityChrome div:nth-child(3) {
+  animation-delay: -3s;
+  /* Adjusted for 3 divs */
+}
+
+@keyframes move {
+  0% {
+      offset-distance: 0%;
+  }
+
+  100% {
+      offset-distance: 100%;
+  }
+}
+
+.infinityChrome {
+  display: none;
+}
+
+/* Hide by default, JS will show */
+
+/* Non-Chrome version styles */
+.infinity div {
+  top: 0;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  animation: rotate 6.9s linear infinite;
+}
+
+.infinity span {
+  left: -8px;
+  top: 50%;
+  margin: -8px 0 0 0;
+  width: 16px;
+  height: 16px;
+  display: block;
+  background: var(--accent-color);
+  /* Use accent color */
+  border-radius: 50%;
+  transform-origin: 38px 0px;
+  /* Adjusted transform origin */
+  animation: rotate 2.3s linear infinite reverse;
+  /* Adjusted timing for 3 spans */
+}
+
+.infinity div:nth-child(1) {
+  transform: rotate(0deg);
+}
+
+.infinity div:nth-child(1) span {
+  animation-delay: -0.4s;
+  background: var(--accent-color);
+}
+
+/* Main color */
+.infinity div:nth-child(2) {
+  transform: rotate(120deg);
+}
+
+/* Adjusted rotation for 3 */
+.infinity div:nth-child(2) span {
+  animation-delay: -0.8s;
+  background: var(--button-color);
+}
+
+/* Optional different color */
+.infinity div:nth-child(3) {
+  transform: rotate(240deg);
+}
+
+/* Adjusted rotation for 3 */
+.infinity div:nth-child(3) span {
+  animation-delay: -1.2s;
+  background: var(--text-color);
+}
+
+/* Optional different color */
+
+@keyframes rotate {
+  0% {
+      transform: rotate(0deg);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+.infinity {
+  display: none;
+}
+
+/* Hide by default, JS will show */
+
+/* SVG Goo Filter - Hidden */
+.hidden-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* --- End Infinity Loader Styles --- */
+
+
+/* Hero Canvas Container */
+#heroCanvasContainer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: 0.6;
-  /* Adjusted opacity */
+  overflow: hidden;
 }
 
-.scroll-down {
-  position: absolute;
-  bottom: 40px;
-  /* Increased distance from bottom */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  color: white;
-  animation: bounce 2s infinite;
-  cursor: pointer;
+#heroCanvas {
+  display: block;
 }
 
-@keyframes bounce {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0) translateX(-50%);
-  }
-
-  40% {
-    transform: translateY(-20px) translateX(-50%);
-  }
-
-  /* Increased bounce height */
-  60% {
-    transform: translateY(-10px) translateX(-50%);
-  }
+/* Navigation */
+nav {
+  background-color: transparent;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Buttons */
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  padding: 12px 30px;
-  /* Slightly larger padding */
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  border: none;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(46, 80, 119, 0.3);
-  display: inline-block;
-  /* Ensure button behaves like a block element */
-  text-align: center;
+nav.scrolled {
+  background-color: var(--card-bg-color);
+  /* Use card background on scroll */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.btn-primary:hover,
-.btn-primary:focus {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(46, 80, 119, 0.5);
-  outline: none;
-  /* Remove default focus outline */
+.nav-text-color {
+  color: var(--heading-color);
+  /* White text initially */
+  transition: color 0.3s ease;
 }
 
-.btn-primary:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: 0 4px 15px rgba(46, 80, 119, 0.3);
+nav.scrolled .nav-text-color {
+  color: var(--text-color);
 }
 
-/* Navbar */
-.navbar {
-  backdrop-filter: blur(10px);
-  background-color: #F0BB78;
-  transition: all 0.3s ease;
-  padding: 1rem 1.5rem;
-  /* Standard Tailwind padding */
-}
-
-.navbar.scrolled {
-  background-color: #A4B465;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-}
+/* Off-white text when scrolled */
 
 .nav-link {
   position: relative;
-  margin: 0 12px;
-  /* Adjusted spacing */
-  padding: 8px 0;
-  /* Increased clickable area */
-  font-weight: 500;
-  transition: color 0.3s ease;
-  color: var(--dark);
-  /* Default color */
+  padding-bottom: 4px;
 }
 
 .nav-link::after {
-  content: "";
+  content: '';
   position: absolute;
-  width: 0;
-  height: 2px;
   bottom: 0;
   left: 0;
-  background-color: var(--secondary);
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color);
   transition: width 0.3s ease;
 }
 
-.nav-link:hover,
-.nav-link:focus {
-  color: var(--primary);
-  /* Hover color */
-  outline: none;
-}
-
 .nav-link:hover::after,
-.nav-link:focus::after {
+.nav-link.active::after {
   width: 100%;
 }
 
-/* Mobile Menu */
-.mobile-menu {
-  background-color: rgba(255, 255, 255, 0.98);
-  /* Slightly transparent white */
-  backdrop-filter: blur(5px);
+.nav-link:hover {
+  color: var(--accent-color) !important;
 }
 
-.mobile-link {
-  color: var(--primary);
-  font-weight: 600;
+/* Hover effect */
+
+/* Buttons */
+.cta-button {
+  background-color: var(--button-color);
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  border-radius: 9999px;
+  /* rounded-full */
 }
 
-.mobile-link:hover,
-.mobile-link:focus {
-  color: var(--secondary);
-  outline: none;
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px rgba(7, 122, 125, 0.2);
+  background-color: #099a9e;
+  /* Slightly lighter teal */
 }
 
-/* Section Titles */
-h2 {
-  margin-bottom: 4rem;
-  /* Increased bottom margin */
-}
-
-/* Feature Cards */
-.feature-card {
-  background-color: white;
-  border-radius: 16px;
-  padding: 35px 30px;
-  /* Adjusted padding */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+/* Cards (Packages, Reviews etc.) */
+.package-card {
+  background-color: var(--card-bg-color);
+  border-radius: 0.5rem;
+  /* rounded-lg */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* shadow-md */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
-  /* Ensure cards in a row have same height */
   display: flex;
   flex-direction: column;
-  /* Align content vertically */
 }
 
-.feature-card:hover {
+.package-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  /* Enhanced shadow */
 }
 
-.feature-icon {
-  width: 60px;
-  /* Slightly smaller icon */
-  height: 60px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 25px;
-  /* Increased margin */
-  color: white;
-  font-size: 22px;
-  /* Adjusted icon size */
-  flex-shrink: 0;
-  /* Prevent icon from shrinking */
-}
-
-.feature-card h3 {
-  color: var(--primary);
-}
-
-.feature-card p {
+.package-card .p-6 {
   flex-grow: 1;
-  /* Allow paragraph to take remaining space */
-  color: #555;
-  /* Slightly lighter text */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.package-card img {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+/* Ensure image fits rounded corners */
+
+/* Section Backgrounds */
+.section-subtle-bg {
+  background-color: var(--subtle-bg-color);
+}
+
+.section-card-bg {
+  background-color: var(--card-bg-color);
+}
+
+/* Text Colors */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading-color);
+}
+
+/* White headings */
+p,
+li,
+span,
+label,
+select,
+textarea,
+input {
+  color: var(--text-color);
+}
+
+/* Default text color */
+.text-muted {
+  color: var(--text-muted-color);
+}
+
+/* Muted gray text */
+a {
+  color: var(--accent-color);
+  transition: color 0.3s ease;
+}
+
+/* Accent color for links */
+a:hover {
+  color: #a7f3e6;
+}
+
+/* Lighter accent on hover */
+
+/* Forms */
+.form-input {
+  background-color: rgba(15, 59, 80, 0.7);
+  /* Darker transparent bg */
+  border: 2px solid rgba(122, 226, 207, 0.3);
+  /* Accent border */
+  color: var(--text-color);
+  /* Ensure text is readable */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+}
+
+.form-input::placeholder {
+  color: var(--text-muted-color);
+  opacity: 0.8;
+}
+
+.form-input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(122, 226, 207, 0.25);
+  outline: none;
+  background-color: rgba(15, 59, 80, 0.9);
+  /* Slightly less transparent on focus */
+}
+
+.form-input.error {
+  border-color: #f87171;
+  /* Tailwind red-400 */
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }
 
 /* Gallery */
 .gallery-item {
   overflow: hidden;
-  border-radius: 12px;
-  /* Softer corners */
-  height: 280px;
-  /* Increased height */
   position: relative;
   cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .gallery-item img {
-  transition: transform 0.5s ease, filter 0.3s ease;
-  /* Added filter transition */
+  transition: transform 0.5s ease;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .gallery-item:hover img {
-  transform: scale(1.1);
-  filter: brightness(0.9);
-  /* Slight dim on hover */
+  transform: scale(1.05);
 }
 
-.gallery-overlay {
-  position: absolute;
-  bottom: 0;
-  /* Position at bottom */
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  /* Stronger gradient */
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  /* Slower transition */
-  padding: 25px 20px;
-  /* Increased padding */
-  color: white;
-}
-
-.gallery-item:hover .gallery-overlay {
-  opacity: 1;
-}
-
-.gallery-overlay h3 {
-  transform: translateY(10px);
-  /* Start slightly lower */
-  transition: transform 0.4s ease;
-}
-
-.gallery-item:hover .gallery-overlay h3 {
-  transform: translateY(0);
-}
-
-/* Lightbox */
 .lightbox {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(6, 32, 43, 0.95);
+  /* Darker lightbox bg */
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
+  align-items: center;
+  z-index: 9999;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -351,599 +463,233 @@ h2 {
   pointer-events: auto;
 }
 
-.lightbox img {
+.lightbox-content {
   max-width: 90%;
-  /* Allow slightly larger image */
-  max-height: 85%;
+  max-height: 90%;
   object-fit: contain;
-  border-radius: 4px;
-  /* Optional: slight rounding */
 }
 
 .lightbox-close {
   position: absolute;
-  top: 25px;
+  top: 20px;
   right: 30px;
-  /* Adjusted position */
   color: white;
-  font-size: 36px;
-  /* Larger close button */
+  font-size: 40px;
+  font-weight: bold;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  line-height: 1;
 }
 
-.lightbox-close:hover {
-  transform: scale(1.1);
-}
-
-/* Interactive Animation Section */
-.gradient-bg {
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--secondary),
-    var(--accent)
-  );
-  color: white;
-  /* Ensure text is readable */
-}
-
-.gradient-bg2 {
-  background: linear-gradient(
-    135deg,
-    var(--light-primary),
-    var(--light-secondary),
-    var(--light-accent)
-  );
-  color: white;
-  /* Ensure text is readable */
-}
-
-#animation-container {
-  /* For p5.js */
-  height: 400px;
-  /* Increased height */
-  background: rgba(255, 255, 255, 0.1);
-  /* More subtle background */
-  border-radius: 12px;
-  position: relative;
-  /* Needed for canvas positioning if absolutely positioned */
-  overflow: hidden;
-  /* Ensure animation stays within bounds */
-}
-
-/* Style for the fallback text if canvas fails */
-#animation-container p,
-#canvasContainer p {
-  padding: 20px;
-  font-style: italic;
-}
-
-/* Testimonials */
-.testimonial-card {
-  background-color: white;
-  border-radius: 12px;
-  padding: 35px 30px;
-  /* Increased padding */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  max-width: 300px;
   height: 100%;
-  /* Ensure cards in a row have same height */
-  position: relative;
+  background-color: var(--card-bg-color);
+  /* Use card bg */
+  z-index: 999;
+  padding: 20px;
+  transition: right 0.4s ease-in-out;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+  /* Stronger shadow */
   display: flex;
   flex-direction: column;
 }
 
-.testimonial-card::before {
-  content: "\f10d";
-  /* Font Awesome quote icon */
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
+.mobile-menu.active {
+  right: 0;
+}
+
+.mobile-menu a {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(245, 238, 221, 0.1);
+  color: var(--text-color);
+}
+
+.mobile-menu a:last-of-type {
+  border-bottom: none;
+}
+
+.mobile-menu .cta-button {
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+/* p5.js Canvases */
+.p5-container {
   position: absolute;
-  top: 20px;
-  left: 25px;
-  font-size: 50px;
-  color: var(--accent);
-  opacity: 0.15;
-  /* Slightly more visible quote */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
 }
 
-.testimonial-card .stars {
-  color: #ffc107;
-  /* Gold color for stars */
-  margin-bottom: 1rem;
+#aboutCanvasContainer {
+  opacity: 0.1;
 }
 
-.testimonial-card p.quote {
-  font-style: italic;
-  color: #444;
-  /* Darker quote text */
-  margin-bottom: 1.5rem;
-  flex-grow: 1;
-  /* Allow quote to take space */
-  position: relative;
-  /* To ensure it's above the pseudo-element */
-  z-index: 1;
+/* Further reduced opacity for dark theme */
+#reviewsCanvasContainer {
+  opacity: 0.08;
 }
 
-.testimonial-author {
-  margin-top: auto;
-  /* Push author to the bottom */
-  position: relative;
-  z-index: 1;
-}
-
-.testimonial-author img {
-  border: 2px solid var(--accent);
-  /* Add a border */
-}
-
-.testimonial-author h4 {
-  color: var(--primary);
-}
-
-/* Contact Section */
-#contact {
-  position: relative;
-  background-attachment: fixed;
-  /* Parallax */
-}
-
-#contact::before {
-  /* Overlay for background image */
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(46, 80, 119, 0.92),
-    rgba(77, 161, 169, 0.9)
-  );
-  /* Use primary/secondary with opacity */
-  z-index: 1;
-}
-
-#contact .container {
-  position: relative;
-  z-index: 2;
-}
-
-#contact h2,
-#contact h3,
-#contact p,
-#contact span,
-#contact i {
-  color: white;
-  /* Ensure text is white on the overlay */
-}
-
-#contact .social-icon {
-  background-color: rgba(255, 255, 255, 0.2);
-  /* Lighter background */
-  color: white;
-}
-
-#contact .social-icon:hover {
-  background-color: var(--accent);
-  color: var(--primary);
-}
-
-/* Contact Form */
-#contactForm {
-  background-color: rgba(255, 255, 255, 0.98);
-  /* Slightly more opaque */
-  color: var(--dark);
-  /* Text color inside the form */
-}
-
-#contactForm h3 {
-  color: var(--primary);
-  /* Form title color */
-}
-
-#contactForm label {
-  color: #555;
-  /* Label color */
-  margin-bottom: 0.25rem;
+#aboutCanvas,
+#reviewsCanvas,
+#galleryCanvas {
   display: block;
 }
 
-#contactForm input,
-#contactForm textarea,
-#contactForm select {
-  background-color: white;
-  /* White background for inputs */
-  border: 1px solid #ccc;
-  /* Standard border */
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 5px;
-  /* Reduced margin, error message below */
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  width: 100%;
-  /* Ensure full width */
-  color: var(--dark);
+
+
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+  z-index: 20;
 }
 
-#contactForm input:focus,
-#contactForm textarea:focus,
-#contactForm select:focus {
-  border-color: var(--secondary);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(77, 161, 169, 0.2);
+.scroll-indicator svg {
+  color: var(--heading-color);
 }
 
-/* Style for invalid inputs */
-#contactForm input:invalid,
-#contactForm textarea:invalid,
-#contactForm select:invalid {
-  border-color: var(--danger);
-}
+/* White indicator */
+@keyframes bounce {
 
-/* Style selects when placeholder is shown */
-#contactForm select:required:invalid {
-  color: #6b7280;
-  /* Placeholder text color (Tailwind gray-500) */
-}
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+      transform: translateY(0) translateX(-50%);
+  }
 
-#contactForm option[value=""][disabled] {
-  display: none;
-  /* Hide the disabled option */
-}
+  40% {
+      transform: translateY(-20px) translateX(-50%);
+  }
 
-#contactForm option {
-  color: var(--dark);
-  /* Regular option color */
-}
-
-/* Form Error Messages */
-.form-error {
-  color: var(--danger);
-  font-size: 0.875rem;
-  /* 14px */
-  margin-top: 0.25rem;
-  /* Space above */
-  margin-bottom: 0.75rem;
-  /* Space below */
-  display: none;
-  /* Hidden by default */
-}
-
-/* Form Success/General Message */
-#form-message {
-  font-weight: 500;
-}
-
-#form-message.success {
-  color: var(--success);
-}
-
-#form-message.error {
-  color: var(--danger);
+  60% {
+      transform: translateY(-10px) translateX(-50%);
+  }
 }
 
 /* Footer */
 footer {
-  background-color: var(--primary);
-  color: rgba(255, 255, 255, 0.85);
-  /* Slightly brighter text */
-  padding: 3rem 0 1.5rem 0;
-  /* Adjusted padding */
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border-top: 1px solid rgba(245, 238, 221, 0.1);
 }
 
-footer a:not(.social-icon) {
-  /* Exclude social icons from this rule */
-  color: rgba(255, 255, 255, 0.85);
-  transition: color 0.3s ease;
+footer a {
+  color: var(--text-muted-color);
 }
 
-footer a:not(.social-icon):hover,
-footer a:not(.social-icon):focus {
-  color: var(--accent);
-  outline: none;
+footer a:hover {
+  color: var(--accent-color);
 }
 
-footer h3 {
-  color: white;
-  /* Ensure footer titles are white */
-  margin-bottom: 1.5rem;
+footer .text-xs {
+  color: rgba(245, 238, 221, 0.5);
 }
 
-footer ul {
-  list-style: none;
-  padding: 0;
+/* Swiper Carousel Styles */
+.swiper-wrapper {
+  width: 100%;
+  height: max-content !important;
+  padding-bottom: 64px !important;
+  /* Space for pagination */
+  transition-timing-function: linear !important;
+  /* Keep this for smooth autoplay */
+  position: relative;
+  box-sizing: content-box;
+  /* Important for Swiper */
 }
 
-footer li {
-  margin-bottom: 0.75rem;
-}
-
-footer .social-icon {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-footer .social-icon:hover {
-  background-color: var(--accent);
-  color: var(--primary);
-}
-
-footer .newsletter-form input {
-  color: var(--dark);
-  /* Text color inside input */
-}
-
-footer .newsletter-form button {
-  background-color: var(--accent);
-  color: var(--primary);
-}
-
-footer .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-footer .footer-bottom a {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-footer .footer-bottom a:hover,
-footer .footer-bottom a:focus {
-  color: var(--accent);
-}
-
-/* Map Placeholder */
-#map {
-  background-color: #e0e0e0;
-  /* Light gray background */
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: transparent;
+  /* Slides themselves are transparent */
+  /* Center slide content (optional) */
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: #666;
-  font-style: italic;
-}
-
-/* Dark Mode */
-.dark-mode {
-  --light: #1a1a1a;
-  /* Dark background */
-  --dark: #f6f4f0;
-  /* Light text */
-  background-color: var(--light);
-  color: var(--dark);
-}
-
-.dark-mode .navbar {
-  background-color: rgba(26, 26, 26, 0.8);
-}
-
-.dark-mode .navbar.scrolled {
-  background-color: rgba(26, 26, 26, 0.95);
-}
-
-.dark-mode .nav-link {
-  color: var(--dark);
-  /* Light text for nav links */
-}
-
-.dark-mode .nav-link:hover,
-.dark-mode .nav-link:focus {
-  color: var(--accent);
-  /* Accent color for hover */
-}
-
-.dark-mode .nav-link::after {
-  background-color: var(--accent);
-}
-
-.dark-mode .mobile-menu {
-  background-color: rgba(26, 26, 26, 0.98);
-}
-
-.dark-mode .mobile-link {
-  color: var(--accent);
-}
-
-.dark-mode .feature-card,
-.dark-mode .testimonial-card {
-  background-color: #2a2a2a;
-  /* Darker card background */
-  color: var(--dark);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  /* Darker shadow */
-}
-
-.dark-mode .feature-card p,
-.dark-mode .testimonial-card p.quote {
-  color: #ccc;
-  /* Lighter gray text */
-}
-
-.dark-mode .feature-card h3,
-.dark-mode .testimonial-author h4 {
-  color: var(--accent);
-  /* Accent color for titles */
-}
-
-.dark-mode .testimonial-card::before {
-  color: var(--secondary);
-  /* Secondary color for quote icon */
-  opacity: 0.1;
-}
-
-.dark-mode #contactForm {
-  background-color: rgba(40, 40, 40, 0.98);
-  /* Dark form background */
-}
-
-.dark-mode #contactForm h3 {
-  color: var(--accent);
-  /* Accent title in dark mode */
-}
-
-.dark-mode #contactForm label {
-  color: #bbb;
-  /* Lighter label color */
-}
-
-.dark-mode #contactForm input,
-.dark-mode #contactForm textarea,
-.dark-mode #contactForm select {
-  background-color: #333;
-  /* Dark input background */
-  color: var(--dark);
-  /* Light text in inputs */
-  border-color: #555;
-  /* Darker border */
-}
-
-.dark-mode #contactForm input:focus,
-.dark-mode #contactForm textarea:focus,
-.dark-mode #contactForm select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(121, 215, 190, 0.3);
-  /* Accent focus ring */
-}
-
-.dark-mode #contactForm select:required:invalid {
-  color: #9ca3af;
-  /* Tailwind gray-400 */
-}
-
-.dark-mode #contactForm option {
-  background-color: #333;
-  color: var(--dark);
-}
-
-.dark-mode footer {
-  background-color: #111;
-  /* Darker footer */
-  border-top-color: #333;
-  /* Darker border */
-}
-
-.dark-mode footer a:not(.social-icon) {
-  color: #ccc;
-}
-
-.dark-mode footer a:not(.social-icon):hover,
-.dark-mode footer a:not(.social-icon):focus {
-  color: var(--accent);
-}
-
-.dark-mode footer h3 {
-  color: var(--accent);
-}
-
-.dark-mode footer .footer-bottom {
-  color: #888;
-  border-top-color: #444;
-}
-
-.dark-mode footer .footer-bottom a {
-  color: #888;
-}
-
-.dark-mode footer .footer-bottom a:hover,
-.dark-mode footer .footer-bottom a:focus {
-  color: var(--accent);
-}
-
-/* Dark mode toggle button */
-.dark-mode-toggle {
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 20px;
-  margin-left: 15px;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: var(--secondary);
-  /* Use secondary color */
-  color: white;
-  transition: all 0.3s ease;
-  border: none;
-  font-size: 1rem;
+  height: auto;
+  /* Let content define height */
+  box-sizing: border-box;
+  padding: 0 1rem;
+  /* Add some horizontal padding between slides */
 }
 
-.dark-mode-toggle:hover {
-  background-color: var(--primary);
-  transform: scale(1.05);
+.review-card-content {
+  /* Apply card styles to the content div inside swiper-slide */
+  width: 100%;
+  max-width: 400px;
+  /* Max width for a single review card */
+  margin: 0 auto;
+  /* Center the card within the slide */
+  padding: 1.5rem;
+  /* p-6 */
 }
 
-.dark-mode .dark-mode-toggle {
-  background-color: var(--accent);
-  color: var(--primary);
+.swiper-pagination-progressbar {
+  background: rgba(245, 238, 221, 0.2) !important;
+  /* Light background for progress bar */
+  position: absolute !important;
+  bottom: 10px !important;
+  /* Adjust position */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 80% !important;
+  /* Make it wider */
+  max-width: 400px !important;
+  height: 4px !important;
+  border-radius: 2px;
 }
 
-.dark-mode .dark-mode-toggle:hover {
-  background-color: var(--secondary);
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+  background: var(--accent-color) !important;
+  /* Use accent color for fill */
+  border-radius: 2px;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .gallery-item {
-    height: 220px;
+/* Accessibility focus */
+*:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Tailwind custom colors */
+/* No need for specific bg/text classes if using CSS variables primarily */
+
+/* Helper for animations */
+@keyframes fade-in-up {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
   }
 
-  .feature-card {
-    margin-bottom: 25px;
-  }
-
-  .navbar {
-    padding: 0.75rem 1rem;
-  }
-
-  h1 {
-    font-size: 2.8rem !important;
-  }
-
-  h2 {
-    font-size: 2.2rem !important;
-  }
-
-  #contact .grid {
-    gap: 2rem;
-  }
-
-  /* Reduce gap on mobile */
-  footer .grid {
-    gap: 2rem;
-  }
-
-  footer .footer-bottom {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  footer .footer-bottom div {
-    margin-top: 1rem;
+  to {
+      opacity: 1;
+      transform: translateY(0);
   }
 }
 
-@media (max-width: 576px) {
-  h1 {
-    font-size: 2.2rem !important;
-  }
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
 
-  h2 {
-    font-size: 1.8rem !important;
-  }
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
 
-  .gallery-item {
-    height: 180px;
-  }
-
-  .btn-primary {
-    padding: 10px 20px;
-  }
-
-  .contact-info p {
-    font-size: 0.9rem;
-  }
-
-  .contact-info .fas {
-    margin-right: 0.75rem;
-  }
+.animation-delay-600 {
+  animation-delay: 0.6s;
 }

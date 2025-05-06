@@ -1,749 +1,629 @@
- // Strict mode helps catch common coding errors
- 'use strict';
-
- // Function to safely initialize libraries and scripts
- function initializeSite() {
-     // Check if AOS is loaded before initializing
-     if (typeof AOS !== 'undefined') {
-         try {
-             AOS.init({
-                 duration: 800,
-                 easing: 'ease-in-out',
-                 once: true, // Animation happens only once
-                 // disable: 'mobile' // Optional: disable on mobile
-             });
-         } catch (error) {
-             console.error("Error initializing AOS:", error);
-         }
-     } else {
-         console.warn("AOS library not loaded or failed to load.");
-     }
-
-     // Check if THREE is loaded
-     if (typeof THREE !== 'undefined') {
-         initThreeAnimation(); // Initialize Three.js animation
-     } else {
-         console.warn("Three.js library not loaded or failed to load.");
-         const canvasContainer = document.getElementById('canvasContainer');
-         if (canvasContainer) canvasContainer.innerHTML = "<p style='color: white; text-align: center;'>Hero animation disabled.</p>";
-     }
-
-     // Check if p5 is loaded
-     if (typeof p5 !== 'undefined') {
-         initP5Animation(); // Initialize p5.js animation
-     } else {
-         console.warn("p5.js library not loaded or failed to load.");
-         const animationContainer = document.getElementById('animation-container');
-         if (animationContainer) animationContainer.innerHTML = "<p style='color: white; text-align: center;'>Interactive animation disabled.</p>";
-     }
-
-     // Initialize other components
-     initMobileMenu();
-     initLightbox();
-     initFormValidation();
-     initDarkMode();
-     initNavbarScroll();
-     initSmoothScroll();
- }
-
- // Run initialization when the DOM is fully loaded
- document.addEventListener('DOMContentLoaded', initializeSite);
-
-
- // Three.js Animation for Hero Section
- function initThreeAnimation() {
-     const canvasContainer = document.getElementById('canvasContainer');
-     if (!canvasContainer) {
-         console.error("Element with ID 'canvasContainer' not found for Three.js.");
-         return;
-     }
-
-     let renderer, scene, camera, particlesMesh;
-     let animationFrameId = null; // To control animation loop
-
-     try {
-         // Set up scene, camera, renderer
-         scene = new THREE.Scene();
-         camera = new THREE.PerspectiveCamera(75, canvasContainer.clientWidth / canvasContainer.clientHeight, 0.1, 1000);
-         renderer = new THREE.WebGLRenderer({
-             alpha: true,
-             antialias: true
-         });
-
-         if (!renderer.domElement) {
-             throw new Error("WebGL Renderer could not be created. WebGL might not be supported.");
-         }
-
-         renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
-         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Optimize for high-res displays
-         canvasContainer.appendChild(renderer.domElement);
-
-         // Create particles
-         const particlesGeometry = new THREE.BufferGeometry();
-         const particlesCnt = 5000;
-         const posArray = new Float32Array(particlesCnt * 3);
-         for (let i = 0; i < particlesCnt * 3; i++) {
-             // Spread particles wider but keep depth shallow
-             posArray[i] = (Math.random() - 0.5) * 10; // X, Y
-             if ((i % 3) === 2) posArray[i] = (Math.random() - 0.5) * 2; // Z
-         }
-         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-         // Create particle material
-         const particlesMaterial = new THREE.PointsMaterial({
-             size: 0.008, // Slightly larger particles
-             color: 0xffffff,
-             transparent: true,
-             opacity: 0.7,
-             depthWrite: false, // Prevents depth sorting issues
-             blending: THREE.AdditiveBlending // Brighter effect where particles overlap
-         });
-
-         particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-         scene.add(particlesMesh);
-
-         camera.position.z = 3; // Move camera back slightly
-
-         // Mouse movement effect
-         let mouseX = 0,
-             mouseY = 0;
-         document.addEventListener('mousemove', (event) => {
-             mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-             mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-         });
-
-
-         // Animation loop
-         const clock = new THREE.Clock();
-         const animate = function() {
-             animationFrameId = requestAnimationFrame(animate);
-
-             const elapsedTime = clock.getElapsedTime();
-
-             // Gentle rotation
-             if (particlesMesh) {
-                 particlesMesh.rotation.y = elapsedTime * 0.1;
-                 // Parallax effect based on mouse
-                 camera.position.x += (mouseX * 0.1 - camera.position.x) * 0.05;
-                 camera.position.y += (mouseY * 0.1 - camera.position.y) * 0.05;
-                 camera.lookAt(scene.position);
-             }
-
-             renderer.render(scene, camera);
-         };
-
-         // Handle window resize
-         const onWindowResize = () => {
-             if (canvasContainer.clientWidth > 0 && canvasContainer.clientHeight > 0) {
-                 camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
-                 camera.updateProjectionMatrix();
-                 renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
-                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-             }
-         };
-         window.addEventListener('resize', onWindowResize);
-
-         // Start animation
-         animate();
-
-     } catch (error) {
-         console.error("Error initializing Three.js animation:", error);
-         if (canvasContainer) canvasContainer.innerHTML = `<p style='color: white; text-align: center;'>Hero animation failed to load. ${error.message}</p>`;
-         // Clean up if error occurred mid-initialization
-         if (animationFrameId) cancelAnimationFrame(animationFrameId);
-         if (renderer && renderer.domElement && canvasContainer.contains(renderer.domElement)) {
-             canvasContainer.removeChild(renderer.domElement);
-         }
-         window.removeEventListener('resize', onWindowResize); // Ensure listener is removed
-     }
- }
-
-
- // p5.js Animation for Experience Section
- function initP5Animation() {
-     const animationContainer = document.getElementById('animation-container');
-     if (!animationContainer) {
-         console.error("Element with ID 'animation-container' not found for p5.js.");
-         return;
-     }
-
-     let p5Instance = null; // To hold the p5 instance
-
-     try {
-         // Create a new p5 instance in instance mode
-         p5Instance = new p5(function(p) {
-             let particles = [];
-             // Use colors from CSS variables if possible, otherwise fallback
-             const rootStyles = getComputedStyle(document.documentElement);
-             const colors = [
-                 rootStyles.getPropertyValue('--primary').trim() || '#2E5077',
-                 rootStyles.getPropertyValue('--secondary').trim() || '#4DA1A9',
-                 rootStyles.getPropertyValue('--accent').trim() || '#79D7BE',
-                 rootStyles.getPropertyValue('--light').trim() || '#F6F4F0'
-             ];
-             const numParticles = 80; // Adjusted particle count
-             const connectDistance = 120; // Increased connection distance
-
-
-             p.setup = function() {
-                 const container = document.getElementById('animation-container');
-                 if (container.offsetWidth > 0 && container.offsetHeight > 0) {
-                     const canvas = p.createCanvas(container.offsetWidth, container.offsetHeight);
-                     canvas.parent('animation-container');
-                 } else {
-                     console.warn("p5 container has zero dimensions on setup.");
-                     p.noCanvas(); // Prevent errors if container is not ready
-                     return;
-                 }
-
-                 // Create initial particles
-                 for (let i = 0; i < numParticles; i++) {
-                     particles.push(createParticle());
-                 }
-                 p.frameRate(30); // Optimize frame rate
-             };
-
-             p.draw = function() {
-                 if (!p.canvas) return; // Don't draw if canvas wasn't created
-
-                 p.clear(); // Clear canvas each frame
-
-                 // Update and display particles
-                 particles.forEach((particle, i) => {
-                     particle.update();
-                     particle.display();
-                     // Connect nearby particles
-                     connectParticles(particle, i);
-                 });
-             };
-
-             // Particle class (using simple object for this example)
-             function createParticle() {
-                 let particle = {
-                     pos: p.createVector(p.random(p.width), p.random(p.height)),
-                     vel: p5.Vector.random2D().mult(p.random(0.2, 0.8)), // Random velocity
-                     size: p.random(3, 6),
-                     color: p.random(colors) // Pick a random color from the array
-                 };
-
-                 particle.update = function() {
-                     this.pos.add(this.vel);
-                     // Bounce off edges
-                     if (this.pos.x < 0 || this.pos.x > p.width) this.vel.x *= -1;
-                     if (this.pos.y < 0 || this.pos.y > p.height) this.vel.y *= -1;
-                     // Keep within bounds strictly
-                     this.pos.x = p.constrain(this.pos.x, 0, p.width);
-                     this.pos.y = p.constrain(this.pos.y, 0, p.height);
-                 };
-
-                 particle.display = function() {
-                     p.noStroke();
-                     // Add slight transparency based on velocity maybe?
-                     p.fill(this.color + 'B3'); // Use hex alpha (70%)
-                     p.circle(this.pos.x, this.pos.y, this.size);
-                 };
-
-                 return particle;
-             }
-
-             // Connect particles that are close to each other
-             function connectParticles(particle, index) {
-                 for (let i = index + 1; i < particles.length; i++) {
-                     const other = particles[i];
-                     const d = p.dist(particle.pos.x, particle.pos.y, other.pos.x, other.pos.y);
-
-                     if (d < connectDistance) {
-                         // Calculate opacity based on distance
-                         const alpha = p.map(d, 0, connectDistance, 180, 0); // Fades out (hex A0 approx)
-                         // Use the color of the first particle for the line
-                         p.stroke(particle.color + p.hex(alpha, 2)); // Use hex representation of alpha
-                         p.strokeWeight(0.6); // Slightly thicker lines
-                         p.line(particle.pos.x, particle.pos.y, other.pos.x, other.pos.y);
-                     }
-                 }
-             }
-
-
-             // Handle window resize
-             p.windowResized = function() {
-                 const container = document.getElementById('animation-container');
-                 if (container && container.offsetWidth > 0 && container.offsetHeight > 0) {
-                     p.resizeCanvas(container.offsetWidth, container.offsetHeight);
-                 } else {
-                     console.warn("p5 container has zero dimensions on resize.");
-                 }
-             };
-         }); // End of p5 instance definition
-
-     } catch (error) {
-         console.error("Error initializing p5.js animation:", error);
-         if (animationContainer) animationContainer.innerHTML = `<p style='color: white; text-align: center;'>Interactive animation failed to load. ${error.message}</p>`;
-         // Clean up p5 instance if it exists and error occurred
-         if (p5Instance) {
-             p5Instance.remove();
-         }
-     }
- }
-
-
- // Mobile Menu Toggle Functionality
- function initMobileMenu() {
-     const mobileMenuButton = document.querySelector('.mobile-menu-button');
-     const mobileCloseButton = document.querySelector('.mobile-close-button');
-     const mobileMenu = document.querySelector('.mobile-menu');
-     const mobileLinks = document.querySelectorAll('.mobile-link');
-
-     if (!mobileMenuButton || !mobileCloseButton || !mobileMenu) {
-         console.warn("Mobile menu elements not found.");
-         return;
-     }
-
-     const toggleMenu = (open) => {
-         if (open) {
-             mobileMenu.classList.remove('hidden');
-             mobileMenu.classList.add('flex');
-             document.body.style.overflow = 'hidden'; // Prevent background scroll
-             mobileMenuButton.setAttribute('aria-expanded', 'true');
-         } else {
-             mobileMenu.classList.add('hidden');
-             mobileMenu.classList.remove('flex');
-             document.body.style.overflow = 'auto'; // Restore scroll
-             mobileMenuButton.setAttribute('aria-expanded', 'false');
-         }
-     };
-
-     mobileMenuButton.addEventListener('click', () => toggleMenu(true));
-     mobileCloseButton.addEventListener('click', () => toggleMenu(false));
-
-     // Close menu when a link is clicked
-     mobileLinks.forEach(link => {
-         link.addEventListener('click', () => toggleMenu(false));
-     });
-
-     // Close menu if Escape key is pressed
-     document.addEventListener('keydown', (e) => {
-         if (e.key === 'Escape' && mobileMenu.classList.contains('flex')) {
-             toggleMenu(false);
-         }
-     });
- }
-
-
- // Lightbox Functionality
- function initLightbox() {
-     const galleryItems = document.querySelectorAll('.gallery-item');
-     const lightbox = document.querySelector('.lightbox');
-     const lightboxImg = document.querySelector('.lightbox-img');
-     const lightboxClose = document.querySelector('.lightbox-close');
-
-     if (!lightbox || !lightboxImg || !lightboxClose || galleryItems.length === 0) {
-         console.warn("Lightbox elements not found or no gallery items.");
-         return;
-     }
-
-     const openLightbox = (imgSrc, imgAlt) => {
-         lightboxImg.setAttribute('src', imgSrc);
-         lightboxImg.setAttribute('alt', imgAlt || "Enlarged gallery image");
-         lightbox.classList.add('active');
-         document.body.style.overflow = 'hidden'; // Prevent background scroll
-         lightboxClose.focus(); // Set focus to close button for accessibility
-     };
-
-     const closeLightbox = () => {
-         lightbox.classList.remove('active');
-         document.body.style.overflow = 'auto'; // Restore scroll
-     };
-
-
-     galleryItems.forEach(item => {
-         item.addEventListener('click', () => {
-             const img = item.querySelector('img');
-             if (img) {
-                 openLightbox(img.getAttribute('src'), img.getAttribute('alt'));
-             }
-         });
-         // Add keyboard accessibility
-         item.addEventListener('keydown', (e) => {
-             if (e.key === 'Enter' || e.key === ' ') {
-                 e.preventDefault();
-                 const img = item.querySelector('img');
-                 if (img) openLightbox(img.getAttribute('src'), img.getAttribute('alt'));
-             }
-         });
-         // Add tabindex to make them focusable
-         item.setAttribute('tabindex', '0');
-         item.setAttribute('role', 'button');
-         item.setAttribute('aria-label', 'View image in lightbox');
-     });
-
-     lightboxClose.addEventListener('click', closeLightbox);
-
-     // Close lightbox if clicking outside the image (on the backdrop)
-     lightbox.addEventListener('click', (e) => {
-         if (e.target === lightbox) {
-             closeLightbox();
-         }
-     });
-
-     // Close lightbox with Escape key
-     document.addEventListener('keydown', (e) => {
-         if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-             closeLightbox();
-         }
-     });
- }
-
-
- // Contact Form Validation and Submission Handling (Client-Side)
- function initFormValidation() {
-     const contactForm = document.getElementById('contactForm');
-     if (!contactForm) {
-         console.warn("Contact form not found.");
-         return;
-     }
-
-     const formMessage = document.getElementById('form-message');
-     const submitButton = contactForm.querySelector('button[type="submit"]');
-
-     // Function to display errors
-     const showError = (inputId, message) => {
-         const errorElement = document.getElementById(inputId + 'Error');
-         if (errorElement) {
-             errorElement.textContent = message;
-             errorElement.style.display = 'block';
-         }
-         const inputElement = document.getElementById(inputId);
-         if (inputElement) {
-             inputElement.setAttribute('aria-invalid', 'true');
-             inputElement.setAttribute('aria-describedby', inputId + 'Error');
-         }
-     };
-
-     // Function to clear errors
-     const clearErrors = () => {
-         contactForm.querySelectorAll('.form-error').forEach(error => {
-             error.style.display = 'none';
-             error.textContent = ''; // Clear previous message
-         });
-         contactForm.querySelectorAll('input, select, textarea').forEach(input => {
-             input.removeAttribute('aria-invalid');
-             input.removeAttribute('aria-describedby');
-         });
-         if (formMessage) {
-             formMessage.style.display = 'none';
-             formMessage.textContent = '';
-             formMessage.className = 'mb-4 text-center text-sm font-medium'; // Reset class
-         }
-     };
-
-     // Function to validate date range
-     const validateDates = (checkinInput, checkoutInput) => {
-         const checkinDate = new Date(checkinInput.value);
-         const checkoutDate = new Date(checkoutInput.value);
-         // Basic check: Ensure checkout is after checkin
-         if (checkinInput.value && checkoutInput.value && checkoutDate <= checkinDate) {
-             showError('checkout', 'Check-out date must be after check-in date.');
-             return false;
-         }
-         // Add more checks? e.g., minimum stay duration
-         return true;
-     };
-
-
-     contactForm.addEventListener('submit', async (e) => {
-         e.preventDefault(); // Prevent default form submission
-         clearErrors(); // Clear previous errors first
-
-         // Get form elements
-         const firstName = document.getElementById('firstName');
-         const lastName = document.getElementById('lastName');
-         const email = document.getElementById('email');
-         const phone = document.getElementById('phone');
-         const checkin = document.getElementById('checkin');
-         const checkout = document.getElementById('checkout');
-         const guests = document.getElementById('guests');
-         const requests = document.getElementById('requests'); // Optional field
-
-         let isValid = true;
-
-         // --- Validation Checks ---
-         if (!firstName.value.trim()) {
-             showError('firstName', 'Please enter your first name.');
-             isValid = false;
-         }
-         if (!lastName.value.trim()) {
-             showError('lastName', 'Please enter your last name.');
-             isValid = false;
-         }
-
-         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-         if (!email.value.trim() || !emailPattern.test(email.value)) {
-             showError('email', 'Please enter a valid email address.');
-             isValid = false;
-         }
-
-         const phonePattern = /^[0-9]{10}$/; // Simple 10 digit pattern
-         if (!phone.value.trim() || !phonePattern.test(phone.value)) {
-             showError('phone', 'Please enter a 10-digit phone number.');
-             isValid = false;
-         }
-
-         const today = new Date().toISOString().split('T')[0];
-         if (!checkin.value) {
-             showError('checkin', 'Please select a check-in date.');
-             isValid = false;
-         }
-         // else if (checkin.value < today) { showError('checkin', 'Check-in date cannot be in the past.'); isValid = false; } // Optional: Check against today
-
-         if (!checkout.value) {
-             showError('checkout', 'Please select a check-out date.');
-             isValid = false;
-         }
-         // Validate date order only if both dates are present
-         else if (checkin.value && !validateDates(checkin, checkout)) {
-             isValid = false;
-         }
-
-         if (!guests.value) {
-             showError('guests', 'Please select the number of guests.');
-             isValid = false;
-         }
-         // --- End Validation Checks ---
-
-
-         if (isValid) {
-             if (submitButton) {
-                 submitButton.disabled = true;
-                 submitButton.textContent = 'Sending...';
-             }
-             if (formMessage) {
-                 formMessage.textContent = 'Submitting your request...';
-                 formMessage.className = 'mb-4 text-center text-sm font-medium text-gray-600'; // Indicate processing
-                 formMessage.style.display = 'block';
-             }
-
-             // Prepare form data for submission
-             const formData = new FormData(contactForm);
-
-             // **IMPORTANT**: Actual form submission using Fetch API
-             // Replace '/path/to/your/server-script.php' with your actual backend endpoint
-             try {
-                 // const response = await fetch('/path/to/your/server-script.php', {
-                 //     method: 'POST',
-                 //     body: formData // Send FormData directly
-                 // });
-
-                 // --- MOCK SUBMISSION (REMOVE THIS BLOCK) ---
-                 console.log("Simulating form submission...");
-                 await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network delay
-                 const mockSuccess = Math.random() > 0.2; // Simulate success/failure
-                 const response = {
-                     ok: mockSuccess,
-                     status: mockSuccess ? 200 : 500,
-                     json: async () => (mockSuccess ? {
-                         message: "Request received successfully!"
-                     } : {
-                         message: "Server error, please try again."
-                     })
-                 };
-                 // --- END MOCK SUBMISSION ---
-
-
-                 const result = await response.json();
-
-                 if (response.ok) {
-                     if (formMessage) {
-                         formMessage.textContent = result.message || 'Thank you! Your request has been sent successfully.';
-                         formMessage.className = 'mb-4 text-center text-sm font-medium success'; // Success style
-                     }
-                     contactForm.reset(); // Clear the form on success
-                 } else {
-                     throw new Error(result.message || `Server responded with status: ${response.status}`);
-                 }
-
-             } catch (error) {
-                 console.error('Form submission error:', error);
-                 if (formMessage) {
-                     formMessage.textContent = `Submission failed: ${error.message || 'Please try again later.'}`;
-                     formMessage.className = 'mb-4 text-center text-sm font-medium error'; // Error style
-                 }
-             } finally {
-                 if (submitButton) {
-                     submitButton.disabled = false;
-                     submitButton.textContent = 'Send Request';
-                 }
-                 if (formMessage) formMessage.style.display = 'block'; // Ensure message stays visible
-             }
-
-         } else {
-             if (formMessage) {
-                 formMessage.textContent = 'Please correct the errors highlighted above.';
-                 formMessage.className = 'mb-4 text-center text-sm font-medium error'; // Error style
-                 formMessage.style.display = 'block';
-             }
-             // Focus the first invalid field for accessibility
-             const firstInvalidField = contactForm.querySelector('[aria-invalid="true"]');
-             if (firstInvalidField) firstInvalidField.focus();
-         }
-     });
- }
-
-
- // Dark Mode Toggle Functionality
- function initDarkMode() {
-     const darkModeToggles = document.querySelectorAll('.dark-mode-toggle');
-     const body = document.body;
-     const storageKey = 'darkModePreference';
-
-     const setDarkMode = (enabled) => {
-         const iconClassAdd = enabled ? 'fa-sun' : 'fa-moon';
-         const iconClassRemove = enabled ? 'fa-moon' : 'fa-sun';
-
-         if (enabled) {
-             body.classList.add('dark-mode');
-         } else {
-             body.classList.remove('dark-mode');
-         }
-
-         darkModeToggles.forEach(toggle => {
-             const icon = toggle.querySelector('i');
-             if (icon) {
-                 icon.classList.remove(iconClassRemove);
-                 icon.classList.add(iconClassAdd);
-             }
-             toggle.setAttribute('aria-pressed', String(enabled));
-         });
-
-         // Store preference
-         try {
-             localStorage.setItem(storageKey, enabled ? 'enabled' : 'disabled');
-         } catch (e) {
-             console.warn("Could not save dark mode preference to localStorage:", e);
-         }
-     };
-
-     // Check for stored preference or system preference
-     let currentPreference = localStorage.getItem(storageKey);
-     let prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-     let darkModeEnabled = (currentPreference === 'enabled') || (currentPreference === null && prefersDarkMode);
-
-     // Set initial state based on preference
-     setDarkMode(darkModeEnabled);
-
-     // Add click listener to toggles
-     darkModeToggles.forEach(toggle => {
-         toggle.addEventListener('click', () => {
-             // Toggle the state based on the current body class
-             setDarkMode(!body.classList.contains('dark-mode'));
-         });
-         // Set initial aria-label based on state
-         toggle.setAttribute('aria-label', darkModeEnabled ? 'Disable Dark Mode' : 'Enable Dark Mode');
-     });
-
-     // Listen for changes in system preference
-     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-         // Only change if no explicit preference is stored
-         if (localStorage.getItem(storageKey) === null) {
-             setDarkMode(e.matches);
-         }
-     });
- }
-
-
- // Navbar Scroll Effect
- function initNavbarScroll() {
-     const navbar = document.querySelector('.navbar');
-     if (!navbar) {
-         console.warn("Navbar element not found.");
-         return;
-     }
-     const scrollThreshold = 50; // Pixels to scroll before effect triggers
-
-     const handleScroll = () => {
-         if (window.scrollY > scrollThreshold) {
-             navbar.classList.add('scrolled');
-         } else {
-             navbar.classList.remove('scrolled');
-         }
-     };
-
-     // Apply effect immediately if already scrolled past threshold on load
-     handleScroll();
-
-     // Add scroll listener
-     window.addEventListener('scroll', handleScroll, {
-         passive: true
-     }); // Use passive listener for performance
- }
-
-
- // Smooth Scrolling for Anchor Links
- function initSmoothScroll() {
-     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-         anchor.addEventListener('click', function(e) {
-             const href = this.getAttribute('href');
-
-             // Ensure it's a valid ID selector (#elementId) and not just "#" or "#/"
-             if (href && href.length > 1 && href.startsWith('#') && !href.includes('/')) {
-                 try {
-                     const targetElement = document.querySelector(href);
-
-                     if (targetElement) {
-                         e.preventDefault(); // Prevent default jump only if target exists
-
-                         const navbar = document.querySelector('.navbar');
-                         // Estimate navbar height, fallback to 70 if not found or hidden
-                         const navbarHeight = navbar ? navbar.offsetHeight : 70;
-                         const offsetPadding = 20; // Extra space above the target
-
-                         const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-                         const offsetPosition = elementPosition - navbarHeight - offsetPadding;
-
-                         window.scrollTo({
-                             top: offsetPosition,
-                             behavior: 'smooth'
-                         });
-
-                         // Optional: Update URL hash after scrolling without jumping
-                         // history.pushState(null, null, href);
-
-                         // Close mobile menu if open (check exists first)
-                         const mobileMenu = document.querySelector('.mobile-menu');
-                         if (mobileMenu && mobileMenu.classList.contains('flex')) {
-                             mobileMenu.classList.add('hidden');
-                             mobileMenu.classList.remove('flex');
-                             document.body.style.overflow = 'auto';
-                         }
-                     } else {
-                         console.warn(`Smooth scroll target not found for selector: ${href}`);
-                     }
-                 } catch (error) {
-                     console.error(`Error finding smooth scroll target for selector: ${href}`, error);
-                 }
-             } else if (href === '#') {
-                 // Prevent default jump for plain "#" links if needed
-                 // e.preventDefault();
-             }
-         });
-     });
-
-     // Smooth scroll for the scroll-down arrow
-     const scrollDownButton = document.querySelector('.scroll-down');
-     if (scrollDownButton) {
-         scrollDownButton.addEventListener('click', (e) => {
-             const featuresSection = document.getElementById('features');
-             if (featuresSection) {
-                 e.preventDefault(); // Prevent default if it's an anchor link
-                 const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 70;
-                 const offsetPadding = 20;
-                 const elementPosition = featuresSection.getBoundingClientRect().top + window.scrollY;
-                 const offsetPosition = elementPosition - navbarHeight - offsetPadding;
-
-                 window.scrollTo({
-                     top: offsetPosition,
-                     behavior: 'smooth'
-                 });
-             }
-         });
-     }
- }
+// --- Global Variables & Setup ---
+const preloader = document.getElementById("preloader");
+const navbar = document.getElementById("navbar");
+const navLinks = navbar.querySelectorAll(
+  ".nav-link:not(.mobile-menu .nav-link)"
+); // Exclude mobile links for scrollspy
+const navTextColorElements = navbar.querySelectorAll(".nav-text-color");
+const menuButton = document.getElementById("menuButton");
+const closeMenu = document.getElementById("closeMenu");
+const mobileMenu = document.getElementById("mobileMenu");
+const mobileNavLinks = mobileMenu.querySelectorAll(".nav-link");
+const heroSection = document.getElementById("home");
+const galleryItems = document.querySelectorAll(".gallery-item");
+const lightbox = document.getElementById("lightbox");
+const lightboxImage = document.getElementById("lightboxImage");
+const lightboxClose = document.getElementById("lightboxClose");
+const bookingForm = document.getElementById("bookingForm");
+const contactForm = document.getElementById("contactForm");
+const whyUsItems = document.querySelectorAll(".why-us-item");
+const packageCards = document.querySelectorAll(".package-card");
+
+// --- Preloader Logic (Infinity Loader & Fade Out) ---
+function initPreloader() {
+  // Because only Chrome supports offset-path, feGaussianBlur for now.
+  const isChrome =
+    /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+  const infinityChromeLoader = document.querySelector(".infinityChrome");
+  const infinityLoader = document.querySelector(".infinity");
+
+  if (infinityChromeLoader && infinityLoader) {
+    if (isChrome) {
+      infinityChromeLoader.style.display = "block";
+      infinityLoader.style.display = "none";
+    } else {
+      infinityChromeLoader.style.display = "none";
+      infinityLoader.style.display = "block";
+    }
+  } else {
+    console.error("Preloader elements not found!");
+  }
+
+  // Fade out the preloader after a delay (or use window.onload)
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      // You can adjust or remove the timeout
+      if (preloader) {
+        preloader.classList.add("fade-out");
+      }
+    }, 500); // Short delay after load event
+  });
+}
+initPreloader(); // Run the preloader logic
+
+// --- Navbar Scroll & Style ---
+function handleScroll() {
+  const isTop = window.scrollY < 50;
+  navbar.classList.toggle("scrolled", !isTop);
+
+  // Active Nav Link Highlighting
+  let currentSectionId = "";
+  let sections = document.querySelectorAll("section[id]");
+  sections.forEach((section) => {
+    const sectionTop = section.offsetTop - navbar.offsetHeight - 100; // Adjust offset
+    const sectionBottom = sectionTop + section.offsetHeight;
+    if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
+      currentSectionId = section.getAttribute("id");
+    }
+  });
+  // Handle hero section specifically if no other section is active near top
+  if (
+    !currentSectionId &&
+    window.scrollY < heroSection.offsetHeight - navbar.offsetHeight
+  ) {
+    currentSectionId = "home";
+  }
+
+  navLinks.forEach((link) => {
+    link.classList.remove("active");
+    const href = link.getAttribute("href");
+    if (href === `#${currentSectionId}`) {
+      link.classList.add("active");
+    }
+  });
+  mobileNavLinks.forEach((link) => {
+    // Update mobile links too
+    link.classList.remove("active");
+    const href = link.getAttribute("href");
+    if (href === `#${currentSectionId}`) {
+      link.classList.add("active");
+    }
+  });
+}
+window.addEventListener("scroll", handleScroll);
+handleScroll(); // Initial check
+
+// --- Mobile Menu ---
+menuButton.addEventListener("click", () => {
+  mobileMenu.classList.add("active");
+  document.body.style.overflow = "hidden";
+});
+closeMenu.addEventListener("click", () => {
+  mobileMenu.classList.remove("active");
+  document.body.style.overflow = "";
+});
+mobileNavLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    mobileMenu.classList.remove("active");
+    document.body.style.overflow = "";
+  });
+});
+
+// --- Hero Section Animation (Three.js - Adjusted colors) ---
+let heroScene, heroCamera, heroRenderer, heroParticles;
+
+function initHeroAnimation() {
+  const container = document.getElementById("heroCanvasContainer");
+  if (!container) return;
+  const canvas = document.getElementById("heroCanvas");
+  heroScene = new THREE.Scene();
+  heroCamera = new THREE.PerspectiveCamera(
+    75,
+    container.offsetWidth / container.offsetHeight,
+    0.1,
+    1000
+  );
+  heroCamera.position.z = 5;
+  heroRenderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: true,
+  }); // Added antialias
+  heroRenderer.setSize(container.offsetWidth, container.offsetHeight);
+  heroRenderer.setPixelRatio(window.devicePixelRatio);
+  const particleCount = 5000;
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+  const color = new THREE.Color();
+  for (let i = 0; i < particleCount; i++) {
+    const i3 = i * 3;
+    positions[i3] = (Math.random() - 0.5) * 20;
+    positions[i3 + 1] = (Math.random() - 0.5) * 10;
+    positions[i3 + 2] = (Math.random() - 0.5) * 10;
+    color.setHSL(
+      0.5 + Math.random() * 0.1,
+      0.7,
+      0.7 + Math.random() * 0.2
+    ); /* Brighter particles for dark bg */
+    colors[i3] = color.r;
+    colors[i3 + 1] = color.g;
+    colors[i3 + 2] = color.b;
+  }
+  const particlesGeometry = new THREE.BufferGeometry();
+  particlesGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(positions, 3)
+  );
+  particlesGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  const particleMaterial = new THREE.PointsMaterial({
+    size: 0.04,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.9,
+    sizeAttenuation: true,
+  });
+  heroParticles = new THREE.Points(particlesGeometry, particleMaterial);
+  heroScene.add(heroParticles);
+  animateHero();
+  window.addEventListener("resize", onHeroWindowResize, false);
+}
+
+function animateHero() {
+  requestAnimationFrame(animateHero);
+  const time = Date.now() * 0.0002;
+  if (heroParticles) {
+    heroParticles.rotation.y = time * 0.1;
+    const positions = heroParticles.geometry.attributes.position.array;
+    for (let i = 0; i < positions.length; i += 3) {
+      positions[i + 1] += Math.sin(i * 0.1 + time * 2) * 0.002;
+    }
+    heroParticles.geometry.attributes.position.needsUpdate = true;
+  }
+  if (heroRenderer && heroScene && heroCamera)
+    heroRenderer.render(heroScene, heroCamera);
+}
+
+function onHeroWindowResize() {
+  const container = document.getElementById("heroCanvasContainer");
+  if (!container || !heroCamera || !heroRenderer) return;
+  heroCamera.aspect = container.offsetWidth / container.offsetHeight;
+  heroCamera.updateProjectionMatrix();
+  heroRenderer.setSize(container.offsetWidth, container.offsetHeight);
+}
+initHeroAnimation();
+
+// --- About Us p5.js Background (Adjusted Colors) ---
+// Keep this only if p5.js is needed elsewhere, otherwise remove the script tag and this code
+let aboutSketch = function (p) {
+  let blades = [];
+  let wind = 0;
+  class GrassBlade {
+    /* ... (GrassBlade class) ... */
+    constructor(x, y, h, w) {
+      this.baseX = x;
+      this.baseY = y;
+      this.height = h;
+      this.width = w;
+      this.tipOffset = 0;
+      this.bendFactor = p.random(0.5, 1.5);
+      this.color = p.color(
+        122,
+        226,
+        207,
+        p.random(15, 40)
+      ); /* More transparent */
+    }
+    update(windForce) {
+      this.tipOffset =
+        p.sin(windForce + this.baseX * 0.05) *
+        this.height *
+        0.1 *
+        this.bendFactor;
+    }
+    display() {
+      p.noStroke();
+      p.fill(this.color);
+      p.beginShape();
+      p.vertex(this.baseX - this.width / 2, this.baseY);
+      p.vertex(this.baseX + this.width / 2, this.baseY);
+      p.vertex(this.baseX + this.tipOffset, this.baseY - this.height);
+      p.endShape(p.CLOSE);
+    }
+  }
+  p.setup = function () {
+    let container = document.getElementById("aboutCanvasContainer");
+    if (!container) return;
+    let canvas = p.createCanvas(container.offsetWidth, container.offsetHeight);
+    canvas.parent("aboutCanvas");
+    for (let x = 0; x < p.width; x += p.random(5, 15)) {
+      let h = p.random(p.height * 0.1, p.height * 0.3);
+      let w = p.random(2, 5);
+      blades.push(new GrassBlade(x, p.height, h, w));
+    }
+  };
+  p.draw = function () {
+    p.clear();
+    wind += 0.02;
+    for (let blade of blades) {
+      blade.update(wind);
+      blade.display();
+    }
+  };
+  p.windowResized = function () {
+    let container = document.getElementById("aboutCanvasContainer");
+    if (!container) return;
+    p.resizeCanvas(container.offsetWidth, container.offsetHeight);
+    blades = [];
+    for (let x = 0; x < p.width; x += p.random(5, 15)) {
+      let h = p.random(p.height * 0.1, p.height * 0.3);
+      let w = p.random(2, 5);
+      blades.push(new GrassBlade(x, p.height, h, w));
+    }
+  };
+};
+if (typeof p5 !== "undefined") {
+  // Check if p5 exists before creating sketch
+  new p5(aboutSketch);
+}
+
+// --- Gallery Lightbox ---
+galleryItems.forEach((item) => {
+  item.addEventListener("click", () => {
+    const imgSrc = item.querySelector(".gallery-image").getAttribute("src");
+    if (imgSrc && lightboxImage && lightbox && lightboxClose) {
+      lightboxImage.setAttribute("src", imgSrc);
+      lightbox.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+  });
+});
+if (lightboxClose)
+  lightboxClose.addEventListener("click", () => {
+    lightbox.classList.remove("active");
+    lightboxImage.setAttribute("src", "");
+    document.body.style.overflow = "";
+  });
+if (lightbox)
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+      lightbox.classList.remove("active");
+      lightboxImage.setAttribute("src", "");
+      document.body.style.overflow = "";
+    }
+  });
+
+// --- Why Us & Package Animations (GSAP ScrollTrigger) ---
+gsap.registerPlugin(ScrollTrigger);
+whyUsItems.forEach((item, index) => {
+  gsap.from(item, {
+    scrollTrigger: {
+      trigger: item,
+      start: "top 85%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 50,
+    duration: 0.6,
+    delay: index * 0.1,
+    ease: "power2.out",
+  });
+  const iconContainer = item.querySelector(".icon-container");
+  if (iconContainer) {
+    item.addEventListener("mouseenter", () =>
+      gsap.to(iconContainer, {
+        scale: 1.1,
+        y: -5,
+        duration: 0.3,
+        ease: "back.out(1.7)",
+      })
+    );
+    item.addEventListener("mouseleave", () =>
+      gsap.to(iconContainer, {
+        scale: 1,
+        y: 0,
+        duration: 0.3,
+        ease: "back.out(1.7)",
+      })
+    );
+  }
+});
+packageCards.forEach((card, index) => {
+  gsap.from(card, {
+    scrollTrigger: {
+      trigger: card,
+      start: "top 90%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 60,
+    duration: 0.5,
+    delay: (index % 4) * 0.1,
+    ease: "power1.out",
+  });
+});
+
+// --- Form Validation ---
+function validateForm(form) {
+  let isValid = true;
+  const requiredInputs = form.querySelectorAll("[required]");
+  const emailInputs = form.querySelectorAll('input[type="email"]');
+  form
+    .querySelectorAll(".form-input")
+    .forEach((input) => input.classList.remove("error"));
+  form
+    .querySelectorAll(".error-message")
+    .forEach((msg) => msg.classList.add("hidden"));
+  form
+    .querySelector("#formSuccessMessage, #contactFormSuccessMessage")
+    ?.classList.add("hidden");
+  form
+    .querySelector("#formErrorMessage, #contactFormErrorMessage")
+    ?.classList.add("hidden");
+
+  requiredInputs.forEach((input) => {
+    const errorMsg = form.querySelector(`#${input.id}Error`);
+    let inputValid = false;
+    if (input.type === "checkbox") inputValid = input.checked;
+    else if (input.type === "radio") {
+      const radioGroup = form.querySelectorAll(`input[name="${input.name}"]`);
+      inputValid = Array.from(radioGroup).some((radio) => radio.checked);
+    } else inputValid = input.value.trim() !== "";
+    if (!inputValid) {
+      isValid = false;
+      input.classList.add("error");
+      if (errorMsg) errorMsg.classList.remove("hidden");
+    }
+  });
+  emailInputs.forEach((input) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const errorMsg = form.querySelector(`#${input.id}Error`);
+    if (input.value.trim() !== "" && !emailPattern.test(input.value)) {
+      isValid = false;
+      input.classList.add("error");
+      if (errorMsg) errorMsg.classList.remove("hidden");
+    }
+  });
+  if (form.id === "bookingForm") {
+    const checkin = form.querySelector("#checkin");
+    const checkout = form.querySelector("#checkout");
+    const dateOrderError = form.querySelector("#dateOrderError");
+    const checkinError = form.querySelector("#checkinError");
+    const today = new Date().toISOString().split("T")[0];
+    if (
+      checkin &&
+      checkout &&
+      checkin.value &&
+      checkout.value &&
+      checkout.value <= checkin.value
+    ) {
+      isValid = false;
+      checkout.classList.add("error");
+      if (dateOrderError) dateOrderError.classList.remove("hidden");
+    }
+    if (checkin && checkin.value && checkin.value < today) {
+      isValid = false;
+      checkin.classList.add("error");
+      if (checkinError) {
+        checkinError.textContent = "Check-in date cannot be in the past.";
+        checkinError.classList.remove("hidden");
+      }
+    }
+  }
+  return isValid;
+}
+if (bookingForm)
+  bookingForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (validateForm(this)) {
+      console.log("Booking Form Data:", new FormData(this));
+      this.querySelector("#formSuccessMessage")?.classList.remove("hidden");
+      this.querySelector("#formErrorMessage")?.classList.add("hidden");
+      this.reset();
+    } else {
+      this.querySelector("#formErrorMessage")?.classList.remove("hidden");
+      this.querySelector("#formSuccessMessage")?.classList.add("hidden");
+      console.log("Booking form validation failed");
+    }
+  });
+if (contactForm)
+  contactForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (validateForm(this)) {
+      console.log("Contact Form Data:", new FormData(this));
+      this.querySelector("#contactFormSuccessMessage")?.classList.remove(
+        "hidden"
+      );
+      this.querySelector("#contactFormErrorMessage")?.classList.add("hidden");
+      this.reset();
+    } else {
+      this.querySelector("#contactFormErrorMessage")?.classList.remove(
+        "hidden"
+      );
+      this.querySelector("#contactFormSuccessMessage")?.classList.add("hidden");
+      console.log("Contact form validation failed");
+    }
+  });
+
+// --- Customer Reviews Swiper Carousel ---
+var swiper = new Swiper(".progress-slide-carousel", {
+  loop: true,
+  grabCursor: true, // Add grab cursor
+  slidesPerView: 1, // Show 1 slide on mobile
+  spaceBetween: 30, // Space between slides
+  breakpoints: {
+    // when window width is >= 768px
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 30,
+    },
+    // when window width is >= 1024px
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 40,
+    },
+  },
+  autoplay: {
+    delay: 3500, // Slower autoplay
+    disableOnInteraction: false,
+  },
+  pagination: {
+    el: ".progress-slide-carousel .swiper-pagination",
+    type: "progressbar",
+  },
+  // Removed fraction option as progressbar is used
+});
+
+// -----------------------------------------
+// --- Customer Reviews Swiper Carousel ---
+var swiper = new Swiper(".progress-slide-carousel", {
+  // Selects the HTML element
+  loop: true, // Enables continuous looping
+  grabCursor: true, // Shows grab cursor on hover
+  slidesPerView: 1, // Default: Show 1 slide (mobile)
+  spaceBetween: 30, // Space between slides
+  breakpoints: {
+    // when window width is >= 768px (md)
+    768: {
+      slidesPerView: 2, // Show 2 slides
+      spaceBetween: 30,
+    },
+    // when window width is >= 1024px (lg)
+    1024: {
+      slidesPerView: 3, // Show 3 slides
+      spaceBetween: 40,
+    },
+  },
+  autoplay: {
+    delay: 3500, // Autoplay delay in ms
+    disableOnInteraction: false, // Autoplay continues after user interaction
+  },
+  pagination: {
+    el: ".progress-slide-carousel .swiper-pagination", // Pagination element
+    type: "progressbar", // Use progress bar type pagination
+  },
+});
+
+// --- Reviews p5.js Background (Adjusted Colors) ---
+// Keep this only if p5.js is needed elsewhere, otherwise remove the script tag and this code
+let reviewsSketch = function (p) {
+  let particles = [];
+  class Particle {
+    /* ... (Particle class) ... */
+    constructor() {
+      this.pos = p.createVector(p.random(p.width), p.random(p.height));
+      this.vel = p.createVector(p.random(-0.3, 0.3), p.random(-0.3, 0.3));
+      this.size = p.random(2, 4);
+      this.color = p.color(
+        122,
+        226,
+        207,
+        p.random(10, 35)
+      ); /* Very subtle alpha */
+    } // Adjusted alpha
+    update() {
+      this.pos.add(this.vel);
+      this.edges();
+    }
+    edges() {
+      if (this.pos.x > p.width + this.size) this.pos.x = -this.size;
+      if (this.pos.x < -this.size) this.pos.x = p.width + this.size;
+      if (this.pos.y > p.height + this.size) this.pos.y = -this.size;
+      if (this.pos.y < -this.size) this.pos.y = p.height + this.size;
+    }
+    show() {
+      p.noStroke();
+      p.fill(this.color);
+      p.ellipse(this.pos.x, this.pos.y, this.size);
+    }
+  }
+  p.setup = function () {
+    let container = document.getElementById("reviewsCanvasContainer");
+    if (!container) return;
+    let canvas = p.createCanvas(container.offsetWidth, container.offsetHeight);
+    canvas.parent("reviewsCanvas");
+    for (let i = 0; i < 80; i++) particles.push(new Particle());
+  };
+  p.draw = function () {
+    p.clear();
+    for (let particle of particles) {
+      particle.update();
+      particle.show();
+    }
+  };
+  p.windowResized = function () {
+    let container = document.getElementById("reviewsCanvasContainer");
+    if (!container) return;
+    p.resizeCanvas(container.offsetWidth, container.offsetHeight);
+    particles = [];
+    for (let i = 0; i < 80; i++) particles.push(new Particle());
+  };
+};
+if (typeof p5 !== "undefined") {
+  // Check if p5 exists before creating sketch
+  new p5(reviewsSketch);
+}
+
+// --- CountDown For Numbers
+function animateCountUp(el, target, suffix = "", duration = 2000) {
+  let start = 0;
+  let startTime = null;
+
+  function updateCount(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const progress = currentTime - startTime;
+    const rate = Math.min(progress / duration, 1);
+    const value = Math.floor(rate * target);
+
+    el.textContent = value + suffix;
+
+    if (rate < 1) {
+      requestAnimationFrame(updateCount);
+    }
+  }
+
+  requestAnimationFrame(updateCount);
+}
+
+function initCountUpAnimations() {
+  const counters = document.querySelectorAll(".count-up");
+  const observer = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.getAttribute("data-target"));
+          const suffix = el.getAttribute("data-suffix") || "";
+          animateCountUp(el, target, suffix);
+          observer.unobserve(el); // animate only once
+        }
+      });
+    },
+    { threshold: 0.6 }
+  );
+
+  counters.forEach((counter) => observer.observe(counter));
+}
+
+// const swiper = new Swiper('.swiper', {
+//     slidesPerView: 1,
+//     spaceBetween: 10,
+//     breakpoints: {
+//       640: { slidesPerView: 2, spaceBetween: 15 },
+//       768: { slidesPerView: 3, spaceBetween: 20 },
+//       1024: { slidesPerView: 4, spaceBetween: 25 }
+//     },
+//     loop: true,
+//     autoplay: {
+//       delay: 3000,
+//       disableOnInteraction: false
+//     },
+//     pagination: {
+//       el: '.swiper-pagination',
+//       clickable: true
+//     }
+//   });
+
+document.addEventListener("DOMContentLoaded", initCountUpAnimations);
+
+// Initialize scrollspy on load
+document.addEventListener("DOMContentLoaded", handleScroll);
