@@ -416,7 +416,7 @@
                     formData.append('password', password);
 
                     const request = new XMLHttpRequest();
-                    request.open('POST', 'sign-in-process.php', true); // Or 'processes/sign-in-process.php'
+                    request.open('POST', 'processes/sign-in-process.php', true);
                     
                     request.onreadystatechange = function() {
                         if (request.readyState === XMLHttpRequest.DONE) {
