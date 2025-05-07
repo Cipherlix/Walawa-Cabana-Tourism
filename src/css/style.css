@@ -1,24 +1,22 @@
 :root {
   /* Dark Theme Color Palette */
-  --bg-color: #06202B;
+  --bg-color: #06202b;
   /* Dark Blue/Black */
-  --text-color: #F5EEDD;
+  --text-color: #f5eedd;
   /* Off-White/Beige */
-  --accent-color: #7AE2CF;
+  --accent-color: #7ae2cf;
   /* Teal Accent */
-  --button-color: #077A7D;
+  --button-color: #077a7d;
   /* Dark Teal Button */
   --card-bg-color: #0a2a3a;
   /* Slightly Lighter Dark Blue for Cards */
   --subtle-bg-color: #0f3b50;
   /* Subtle background variation */
-  --heading-color: #FFFFFF;
+  --heading-color: #ffffff;
   /* White for main headings */
   --text-muted-color: #a0aec0;
   /* Gray for muted text */
 }
-
-
 
 html {
   scroll-padding-top: 80px;
@@ -53,7 +51,6 @@ body {
 .tinos {
   font-family: "Tinos-Regular", sans-serif;
 }
-
 
 /* --- Updated Preloader --- */
 .preloader {
@@ -106,7 +103,9 @@ body {
   animation: move 4s cubic-bezier(0.77, 0, 0.175, 1) infinite;
   filter: url(#goo);
   /* Referencing the SVG filter */
-  offset-path: path('M60,30 C60,46.5685425 46.5685425,60 30,60 C13.4314575,60 0,46.5685425 0,30 C0,13.4314575 13.4314575,0 30,0 C46.5685425,0 60,13.4314575 60,30 Z M60,30 C60,46.5685425 73.4314575,60 90,60 C106.568542,60 120,46.5685425 120,30 C120,13.4314575 106.568542,0 90,0 C73.4314575,0 60,13.4314575 60,30 Z');
+  offset-path: path(
+    "M60,30 C60,46.5685425 46.5685425,60 30,60 C13.4314575,60 0,46.5685425 0,30 C0,13.4314575 13.4314575,0 30,0 C46.5685425,0 60,13.4314575 60,30 Z M60,30 C60,46.5685425 73.4314575,60 90,60 C106.568542,60 120,46.5685425 120,30 C120,13.4314575 106.568542,0 90,0 C73.4314575,0 60,13.4314575 60,30 Z"
+  );
 }
 
 .infinityChrome div:nth-child(2) {
@@ -120,11 +119,11 @@ body {
 
 @keyframes move {
   0% {
-      offset-distance: 0%;
+    offset-distance: 0%;
   }
 
   100% {
-      offset-distance: 100%;
+    offset-distance: 100%;
   }
 }
 
@@ -194,11 +193,11 @@ body {
 
 @keyframes rotate {
   0% {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
 
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -217,7 +216,6 @@ body {
 }
 
 /* --- End Infinity Loader Styles --- */
-
 
 /* Hero Canvas Container */
 #heroCanvasContainer {
@@ -243,7 +241,8 @@ nav {
 nav.scrolled {
   background-color: var(--card-bg-color);
   /* Use card background on scroll */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .nav-text-color {
@@ -264,7 +263,7 @@ nav.scrolled .nav-text-color {
 }
 
 .nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -289,7 +288,8 @@ nav.scrolled .nav-text-color {
 .cta-button {
   background-color: var(--button-color);
   color: white;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
   border-radius: 9999px;
   /* rounded-full */
 }
@@ -300,13 +300,69 @@ nav.scrolled .nav-text-color {
   background-color: #099a9e;
   /* Slightly lighter teal */
 }
+/* Styles the reviews section */
+/* Ensures the wrapper containing slides takes necessary width */
+.swiper-wrapper {
+  width: 100%;
+  /* Makes the wrapper span the container */
+  height: max-content !important;
+  padding-bottom: 64px !important;
+  /* Space for pagination */
+  transition-timing-function: linear !important;
+  position: relative;
+  box-sizing: content-box;
+  /* Important for Swiper */
+}
+
+/* Styles individual slides */
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: transparent;
+  /* Slide background is transparent */
+  /* Center slide content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  /* Let content define height */
+  box-sizing: border-box;
+  /* Padding can be adjusted if you want slides closer/further apart */
+  padding: 0 1rem;
+}
+
+/* Styles the content *inside* the slide - applies card background, padding, etc. */
+.review-card-content {
+  background-color: var(--card-bg-color);
+  /* Card background */
+  border-radius: 0.5rem;
+  /* rounded-lg */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* shadow-md */
+  width: 100%;
+  /* Takes full width of the slide's padded area */
+  max-width: 400px;
+  /* Prevents cards from becoming too wide on large screens */
+  margin: 0 auto;
+  /* Centers the card if slide is wider */
+  padding: 1.5rem;
+  /* p-6 */
+  height: 100%;
+  /* Ensures card fills slide height if needed */
+  display: flex;
+  /* Added for consistency */
+  flex-direction: column;
+  /* Added for consistency */
+}
 
 /* Cards (Packages, Reviews etc.) */
 .package-card {
   background-color: var(--card-bg-color);
   border-radius: 0.5rem;
   /* rounded-lg */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   /* shadow-md */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
@@ -426,7 +482,8 @@ a:hover {
   position: relative;
   cursor: pointer;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .gallery-item img {
@@ -544,8 +601,6 @@ a:hover {
   display: block;
 }
 
-
-
 /* Scroll Indicator */
 .scroll-indicator {
   position: absolute;
@@ -562,21 +617,20 @@ a:hover {
 
 /* White indicator */
 @keyframes bounce {
-
   0%,
   20%,
   50%,
   80%,
   100% {
-      transform: translateY(0) translateX(-50%);
+    transform: translateY(0) translateX(-50%);
   }
 
   40% {
-      transform: translateY(-20px) translateX(-50%);
+    transform: translateY(-20px) translateX(-50%);
   }
 
   60% {
-      transform: translateY(-10px) translateX(-50%);
+    transform: translateY(-10px) translateX(-50%);
   }
 }
 
@@ -672,13 +726,13 @@ footer .text-xs {
 /* Helper for animations */
 @keyframes fade-in-up {
   from {
-      opacity: 0;
-      transform: translateY(20px);
+    opacity: 0;
+    transform: translateY(20px);
   }
 
   to {
-      opacity: 1;
-      transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

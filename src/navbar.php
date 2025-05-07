@@ -22,7 +22,7 @@
                 <a href="#booking" class="nav-link nav-text-color tagesschrift">Booking</a>
                 <a href="#reviews" class="nav-link nav-text-color tagesschrift">Reviews</a>
                 <a href="#contact" class="nav-link nav-text-color tagesschrift">Contact</a>
-                <button class="cta-button px-5 py-2 text-white font-medium text-sm tagesschrift"><a href="#" class="text-decoration-none">Sign In</a></button>
+                <button class="cta-button px-5 py-2 text-white font-medium text-sm tagesschrift"><a href="sign-in.php" class="text-decoration-none">Sign In</a></button>
             </div>
 
             <div class="lg:hidden">
@@ -52,7 +52,7 @@
             <a href="#booking" class="nav-link text-lg tinos">Booking</a>
             <a href="#reviews" class="nav-link text-lg tinos">Reviews</a>
             <a href="#contact" class="nav-link text-lg tinos">Contact</a>
-            <button class="cta-button px-5 py-3 text-white font-medium w-full mt-6 text-base tinos"><a href="#" class="text-decoration-none">Sign In</a></button>
+            <button class="cta-button px-5 py-3 text-white font-medium w-full mt-6 text-base tinos"><a href="sign-in.php" class="text-decoration-none">Sign In</a></button>
         </div>
     </div>
 </body>

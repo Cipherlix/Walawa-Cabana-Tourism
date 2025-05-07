@@ -4,27 +4,41 @@ class Database {
 
     public static function setUpConnection(){
         if(!isset(self::$connection)){
+            // Replace with your actual database credentials
             self::$connection = new mysqli("localhost", "root", "Shan_200630103728", "walawa_cabana");
             if (self::$connection->connect_error) {
-                // Log error instead of dying in production ideally
                 error_log("Database Connection failed: " . self::$connection->connect_error);
-                die("Connection failed. Please try again later."); // User-friendly message
+                // In a production environment, you might want a more user-friendly error page
+                // or to handle this without dying, but for development, this is okay.
+                die("Connection failed. Please try again later.");
             }
-            // Optional: Set character set for connection
-             self::$connection->set_charset("utf8mb4");
+            self::$connection->set_charset("utf8mb4");
         }
     }
 
+    /**
+     * Returns the active database connection object.
+     * @return mysqli The mysqli connection object.
+     */
+    public static function getDatabaseConnection(){
+        self::setUpConnection(); // Ensures the connection is established
+        return self::$connection;
+    }
+
+    /**
+     * Executes an INSERT, UPDATE, or DELETE query.
+     * @param string $query The SQL query.
+     * @return bool|mysqli_result True on success (for some IUD operations) or mysqli_result object, false on failure.
+     */
     public static function iud($query){
         self::setUpConnection();
         $result = self::$connection->query($query);
          if (!$result) {
              error_log("Database IUD Query Failed: " . self::$connection->error . " | Query: " . $query);
          }
-        return $result; // Returns true/false for success/failure of IUD
+        return $result;
     }
 
-    // --- ADD THIS METHOD ---
     /**
      * Executes a SELECT query and returns the result set.
      * @param string $query The SQL SELECT query.
@@ -35,12 +49,14 @@ class Database {
         $result = self::$connection->query($query);
         if (!$result) {
             error_log("Database Search Query Failed: " . self::$connection->error . " | Query: " . $query);
-            return false; // Return false on error
+            return false;
         }
-        return $result; // Return the mysqli_result object
+        return $result;
     }
 
-    // Optional: Method to close connection if needed explicitly
+    /**
+     * Optional: Closes the database connection.
+     */
     public static function closeConnection() {
         if(isset(self::$connection)) {
             self::$connection->close();

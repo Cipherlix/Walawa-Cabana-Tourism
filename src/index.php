@@ -87,7 +87,7 @@
 
             <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
                 <div class="md:w-1/2">
-                    <img src="./src/assets/images/cabana/c16.jpg" alt="Peaceful cabana by the lake"
+                    <img src="./assets/images/cabana/c16.jpg" alt="Peaceful cabana by the lake"
                         class="rounded-lg shadow-lg w-full h-auto object-cover">
                 </div>
 

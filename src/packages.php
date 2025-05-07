@@ -14,7 +14,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 <?php
 
-                $query = "SELECT id, name, sub_title, discription, price, img_url FROM packages";
+                $query = "SELECT id, name, sub_title, discription, price, img_url, img_alt FROM packages";
                 $result = Database::iud($query);
 
                 if ($result && $result->num_rows > 0) {

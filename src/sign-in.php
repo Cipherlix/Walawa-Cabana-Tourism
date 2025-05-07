@@ -7,22 +7,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/images/walawa-official-logo.png">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Poppins:wght@300;400;500&display=swap');
-
-        :root {
-            --bg-color: #06202B;
-            --text-color: #F5EEDD;
-            --accent-color: #7AE2CF;
-            --button-color: #077A7D;
-            --card-bg-color: #0a2a3a;
-            --subtle-bg-color: #0f3b50;
-            --heading-color: #FFFFFF;
-            --text-muted-color: #a0aec0;
-        }
 
         body {
-            font-family: 'Poppins', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             overflow: hidden; /* Keep background animation contained */
@@ -38,12 +27,6 @@
                 padding-top: 2rem; /* Add padding when scrollable */
                 padding-bottom: 2rem;
              }
-        }
-
-
-        h1, h2, h3, h4, h5 {
-            font-family: 'Cormorant Garamond', serif;
-            color: var(--heading-color);
         }
 
         .animate-in {
@@ -123,6 +106,9 @@
             border-radius: 0.5rem;
             margin-bottom: 1.25rem; /* space-y-5 from form */
             text-align: center;
+            /* Ensure it animates in too */
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0; /* Start hidden for animation */
         }
     </style>
 </head>
@@ -131,11 +117,11 @@
 
     <div class="form-container animate-in bg-opacity-20 rounded-2xl shadow-xl p-8 w-full max-w-lg">
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-semibold text-center mb-2">Walawa Cabana</h1>
-            <p class="text-lg" style="color: var(--text-muted-color);">Sign In to Your Account</p>
+            <h1 class="text-4xl font-semibold text-center mb-2 tagesschrift">Walawa Cabana</h1>
+            <p class="text-lg tinos" style="color: var(--text-muted-color);">Sign In to Your Account</p>
             <div class="h-1 w-16 mx-auto mt-1" style="background-color: var(--accent-color);"></div>
-            <p class="mt-3 text-sm">Don't have an account? <a href="sign-up.php" class="text-accent-color hover:underline">Create an Account</a></p>
-            <p class="mt-3 text-sm italic" style="color: var(--text-muted-color);">Welcome back to your lakeside escape 🛶</p>
+            <p class="mt-3 text-sm tinos">Don't have an account? <a href="sign-up.php" class="text-accent-color hover:underline">Create an Account</a></p>
+            <p class="mt-3 text-sm italic tagesschrift" style="color: var(--text-muted-color);">Welcome back to your lakeside escape 🛶</p>
         </div>
 
         <div id="form-feedback" class="hidden"></div>
@@ -143,32 +129,32 @@
         <form id="signin-form" class="space-y-5">
 
             <div class="animate-in" style="animation-delay: 0.4s">
-                <label for="email" class="block text-sm font-medium mb-1">Email Address</label>
+                <label for="email" class="block text-sm font-medium mb-1 tinos">Email Address</label>
                 <input
                     type="email"
                     id="email"
                     name="email"
                     required
-                    class="custom-input w-full px-4 py-3 rounded-lg focus:outline-none"
+                    class="custom-input w-full px-4 py-3 rounded-lg focus:outline-none tinos"
                     placeholder="your.email@example.com"
                 >
             </div>
 
             <div class="animate-in" style="animation-delay: 0.5s">
-                <label for="password" class="block text-sm font-medium mb-1">Password</label>
+                <label for="password" class="block text-sm font-medium mb-1 tinos">Password</label>
                 <div class="relative">
                     <input
                         type="password"
                         id="password"
                         name="password"
                         required
-                        class="custom-input w-full px-4 py-3 rounded-lg focus:outline-none pr-10"
+                        class="custom-input w-full px-4 py-3 rounded-lg focus:outline-none pr-10 tinos"
                         placeholder="••••••••"
                     >
                     <button
                         type="button"
                         id="toggle-password"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200 focus:outline-none"
+                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200 focus:outline-none "
                         style="color: var(--text-muted-color);"
                         aria-label="Toggle password visibility"
                     >
@@ -187,7 +173,7 @@
             <div class="pt-2 animate-in" style="animation-delay: 0.6s">
                 <button
                     type="submit"
-                    class="btn-primary w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium focus:outline-none"
+                    class="btn-primary w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium focus:outline-none tinos"
                 >
                     <span id="button-text">Sign In</span>
                     <span id="button-spinner" class="hidden">
@@ -201,7 +187,7 @@
         </form>
 
         <div class="mt-6 text-center text-sm animate-in" style="animation-delay: 0.8s">
-            <a href="#" class="flex items-center justify-center transition-colors hover:text-white" style="color: var(--text-muted-color);">
+            <a href="index.php" class="flex items-center justify-center transition-colors hover:text-white tagesschrift" style="color: var(--text-muted-color);">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
@@ -209,13 +195,14 @@
             </a>
         </div>
 
-        <div class="mt-6 text-center text-xs animate-in" style="animation-delay: 0.9s; color: var(--text-muted-color);">
+        <div class="mt-6 text-center text-xs animate-in tagesschrift" style="animation-delay: 0.9s; color: var(--text-muted-color);">
             <p>We're glad to see you again!</p>
         </div>
     </div>
 
     <script>
-        // P5.js Water Animation with Particles (SAME AS sign-up.php)
+        // P5.js Water Animation (Global Scope)
+        // ... (Keep your P5.js code: particles, PARTICLE_COUNT, ripples, setup(), draw(), triggerRippleEffect(), Particle class, Ripple class, windowResized() here - exactly as it was working before)
         let particles = [];
         const PARTICLE_COUNT = 80;
         let ripples = [];
@@ -327,14 +314,16 @@
         function windowResized() {
             resizeCanvas(windowWidth, windowHeight);
         }
+        // End of P5.js Code
 
-        // Form Validation and Interaction Logic
+
+        // Form Interaction Logic (Scoped within DOMContentLoaded)
         document.addEventListener('DOMContentLoaded', function() {
             const signinForm = document.getElementById('signin-form');
             const formFeedback = document.getElementById('form-feedback');
             const buttonText = document.getElementById('button-text');
             const buttonSpinner = document.getElementById('button-spinner');
-            const formContainer = document.querySelector('.form-container');
+            const formContainer = document.querySelector('.form-container'); // For P5 ripple effect
 
             // --- Password Toggle Functionality ---
             function setupPasswordToggle(toggleButtonId, passwordFieldId) {
@@ -352,84 +341,112 @@
                     eyeSlashIcon.classList.toggle('hidden', type === 'password');
                 });
             }
-
             setupPasswordToggle('toggle-password', 'password');
 
-            // --- Form Submission Handling ---
-            signinForm.addEventListener('submit', function(e) {
-                e.preventDefault(); 
-
-                const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('password').value;
-
-                // --- Basic Validation ---
-                if (!email || !validateEmail(email)) {
-                    showFeedback('Please enter a valid email address.', 'error');
-                    return;
-                }
-                if (!password) { 
-                    showFeedback('Please enter your password.', 'error');
-                    return;
-                }
-                
-                // --- If Validation Passes ---
-                buttonText.classList.add('hidden');
-                buttonSpinner.classList.remove('hidden');
-                formFeedback.classList.add('hidden'); 
-
-                console.log('Signing in with:', { email }); 
-                setTimeout(() => {
-                    // Simulate successful sign-in
-                    showFeedback('Sign in successful! Redirecting...', 'success');
-                    
-                    setTimeout(() => {
-                        // In a real app, redirect to a dashboard or home page
-                        // window.location.href = '/dashboard'; 
-
-                        // For demo: Reset form and button state
-                        signinForm.reset();
-                        document.getElementById('password').setAttribute('type', 'password');
-                        document.querySelector('#toggle-password .icon-eye').classList.remove('hidden');
-                        document.querySelector('#toggle-password .icon-eye-slash').classList.add('hidden');
-
-                        buttonText.classList.remove('hidden');
-                        buttonSpinner.classList.add('hidden');
-                        formFeedback.classList.add('hidden'); 
-                    }, 2000);
-
-                }, 1500); 
-            });
 
             // --- Helper Function to Show Feedback ---
-            function showFeedback(message, type) {
+            function showFeedback(message, type, permanent = false) {
                 formFeedback.textContent = message;
-                formFeedback.classList.remove('hidden', 'bg-error', 'bg-success');
-
+                formFeedback.className = 'text-center py-2 rounded text-sm'; // Reset classes
+                formFeedback.classList.add('animate-in'); // Re-apply animation class
                 if (type === 'error') {
                     formFeedback.classList.add('bg-error');
+                } else { // success
+                    formFeedback.classList.add('bg-success');
+                }
+                formFeedback.classList.remove('hidden');
+
+                // Ensure button text is visible and spinner is hidden if it's an error display
+                if (type === 'error') {
                     buttonText.classList.remove('hidden');
                     buttonSpinner.classList.add('hidden');
+                }
+
+                if (!permanent) {
                     setTimeout(() => {
                        formFeedback.classList.add('hidden');
-                    }, 5000);
-                } else { 
-                    formFeedback.classList.add('bg-success');
+                    }, 5000); // Hide after 5 seconds if not permanent
                 }
             }
 
-            // --- Email Validation Function ---
+            // --- Email Validation Function (Client-side) ---
             function validateEmail(email) {
                 const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(String(email).toLowerCase());
             }
 
-            formContainer.addEventListener('click', function(e) {
-                if (e.target === formContainer) {
-                    if (typeof triggerRippleEffect === 'function') {
-                         triggerRippleEffect(e.clientX, e.clientY);
+            // --- P5 Ripple on Form Container Click (Optional visual flair) ---
+             if (formContainer && typeof triggerRippleEffect === 'function') {
+                formContainer.addEventListener('click', function(e) {
+                    if (e.target === formContainer) { // Click on container itself, not inputs/buttons
+                         triggerRippleEffect(e.clientX, e.clientY); // Calls global P5 function
                     }
-                }
-            });
+                });
+            }
+
+
+            // --- Form Submission Handling ---
+            if (signinForm) {
+                signinForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const emailInput = document.getElementById('email');
+                    const passwordInput = document.getElementById('password');
+                    const email = emailInput.value.trim();
+                    const password = passwordInput.value;
+
+                    // Basic client-side validation (server-side is primary)
+                    if (!email || !validateEmail(email)) {
+                        showFeedback('Please enter a valid email address.', 'error');
+                        emailInput.focus();
+                        return;
+                    }
+                    if (!password) {
+                        showFeedback('Please enter your password.', 'error');
+                        passwordInput.focus();
+                        return;
+                    }
+
+                    buttonText.classList.add('hidden');
+                    buttonSpinner.classList.remove('hidden');
+                    formFeedback.classList.add('hidden'); // Hide previous messages
+
+                    const formData = new FormData();
+                    formData.append('email', email);
+                    formData.append('password', password);
+
+                    const request = new XMLHttpRequest();
+                    request.open('POST', 'sign-in-process.php', true); // Or 'processes/sign-in-process.php'
+                    
+                    request.onreadystatechange = function() {
+                        if (request.readyState === XMLHttpRequest.DONE) {
+                            buttonText.classList.remove('hidden');
+                            buttonSpinner.classList.add('hidden');
+
+                            if (request.status === 200) {
+                                try {
+                                    const response = JSON.parse(request.responseText);
+                                    if (response.status === 'success') {
+                                        showFeedback(response.message, 'success', true); // Permanent success message
+                                        setTimeout(() => {
+                                            window.location.href = 'index.php'; // Redirect to index.php
+                                        }, 1500); // Delay for user to see message
+                                    } else {
+                                        showFeedback(response.message || 'An unknown error occurred.', 'error');
+                                    }
+                                } catch (err) {
+                                    showFeedback('Error processing server response. Please try again.', 'error');
+                                    console.error("JSON Parse Error:", err);
+                                    console.error("Response Text:", request.responseText);
+                                }
+                            } else {
+                                showFeedback('Server error: ' + request.status + '. Please try again later.', 'error');
+                            }
+                        }
+                    };
+                    request.send(formData);
+                });
+            }
         });
     </script>
 </body>

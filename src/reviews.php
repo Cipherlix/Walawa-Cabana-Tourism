@@ -5,60 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* -------------------------------------------------- */
-        /* Ensures the wrapper containing slides takes necessary width */
-        .swiper-wrapper {
-            width: 100%;
-            /* Makes the wrapper span the container */
-            height: max-content !important;
-            padding-bottom: 64px !important;
-            /* Space for pagination */
-            transition-timing-function: linear !important;
-            position: relative;
-            box-sizing: content-box;
-            /* Important for Swiper */
-        }
-
-        /* Styles individual slides */
-        .swiper-slide {
-            text-align: center;
-            font-size: 18px;
-            background: transparent;
-            /* Slide background is transparent */
-            /* Center slide content */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: auto;
-            /* Let content define height */
-            box-sizing: border-box;
-            /* Padding can be adjusted if you want slides closer/further apart */
-            padding: 0 1rem;
-        }
-
-        /* Styles the content *inside* the slide - applies card background, padding, etc. */
-        .review-card-content {
-            background-color: var(--card-bg-color);
-            /* Card background */
-            border-radius: 0.5rem;
-            /* rounded-lg */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            /* shadow-md */
-            width: 100%;
-            /* Takes full width of the slide's padded area */
-            max-width: 400px;
-            /* Prevents cards from becoming too wide on large screens */
-            margin: 0 auto;
-            /* Centers the card if slide is wider */
-            padding: 1.5rem;
-            /* p-6 */
-            height: 100%;
-            /* Ensures card fills slide height if needed */
-            display: flex;
-            /* Added for consistency */
-            flex-direction: column;
-            /* Added for consistency */
-        }
+        
     </style>
 </head>
 
