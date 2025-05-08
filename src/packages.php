@@ -23,7 +23,7 @@
                         echo '<img src="' . htmlspecialchars($row['img_url']) . '" alt="' . htmlspecialchars($row['img_alt']) . '" class="w-full h-48 object-cover tinos">';
                         echo '<div class="p-6">';
                         echo '<div>';
-                        echo '<h3 class="text-xl font-semibold mb-2 text-heading-color tagesschrift">' . htmlspecialchars($row['package_name']) . '</h3>';
+                        echo '<h3 class="text-xl font-semibold mb-2 text-heading-color tagesschrift">' . htmlspecialchars($row['name']) . '</h3>';
                         echo '<p class="text-md text-text-muted-color mb-2 tagesschrift">' . htmlspecialchars($row['sub_title']) . '</p>';
                         // OUTPUT DESCRIPTION WITH <br/> TAGS AS HTML
                         echo '<p class="text-muted mb-4 text-sm tinos">' . $row['discription'] . '</p>';

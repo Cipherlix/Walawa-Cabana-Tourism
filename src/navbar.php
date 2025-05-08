@@ -1,9 +1,51 @@
+<?php
+// Start the session at the very beginning of your navbar.php file
+// to access session variables.
+session_start();
+
+// Define a variable to check login status, based on your sign-in-process.php logic
+$isLoggedIn = isset($_SESSION['user_id']) && !empty($_SESSION['user_lname']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Basic styling for the hover effect */
+        .user-logout-button {
+            position: relative;
+            display: inline-block; /* Or block, depending on layout */
+            cursor: pointer;
+            padding: 8px 15px; /* Adjust padding as needed */
+            border-radius: 4px; /* Optional: for rounded corners */
+            background-color: #0a2a3a; /* Example: Same as your cta-button, or a different style */
+            color: white;
+            text-decoration: none; /* Remove underline from link */
+            font-family: 'Tagesschrift', sans-serif; /* Match your existing font */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+
+        .user-logout-button .logout-text {
+            display: none; /* Hide "Sign Out" text initially */
+        }
+
+        .user-logout-button:hover .user-name-text {
+            display: none; /* Hide user name on hover */
+        }
+
+        .user-logout-button:hover .logout-text {
+            display: inline; /* Show "Sign Out" text on hover */
+        }
+
+        /* If you want the hover state to look different */
+        .user-logout-button:hover {
+            background-color:rgba(232, 55, 55, 0.66); /* Darker shade for hover, example */
+        }
+    </style>
 </head>
 
 <body>
@@ -22,7 +64,15 @@
                 <a href="#booking" class="nav-link nav-text-color tagesschrift">Booking</a>
                 <a href="#reviews" class="nav-link nav-text-color tagesschrift">Reviews</a>
                 <a href="#contact" class="nav-link nav-text-color tagesschrift">Contact</a>
-                <button class="cta-button px-5 py-2 text-white font-medium text-sm tagesschrift"><a href="sign-in.php" class="text-decoration-none">Sign In</a></button>
+
+                <?php if ($isLoggedIn): ?>
+                    <a href="sign-out.php" class="user-logout-button nav-text-color tagesschrift" title="Click to Sign Out">
+                        <span class="user-name-text tagesschrift">Hey, <?php echo htmlspecialchars($_SESSION['user_lname']); ?></span>
+                        <span class="logout-text tagesschrift">Sign Out</span>
+                    </a>
+                <?php else: ?>
+                    <button class="cta-button px-5 py-2 text-white font-medium text-sm tagesschrift"><a href="sign-in.php" class="text-decoration-none">Sign In</a></button>
+                <?php endif; ?>
             </div>
 
             <div class="lg:hidden">
@@ -52,9 +102,16 @@
             <a href="#booking" class="nav-link text-lg tinos">Booking</a>
             <a href="#reviews" class="nav-link text-lg tinos">Reviews</a>
             <a href="#contact" class="nav-link text-lg tinos">Contact</a>
-            <button class="cta-button px-5 py-3 text-white font-medium w-full mt-6 text-base tinos"><a href="sign-in.php" class="text-decoration-none">Sign In</a></button>
+
+            <?php if ($isLoggedIn): ?>
+                <a href="sign-out.php" class="user-logout-button text-lg tinos" title="Click to Sign Out">
+                     <span class="user-name-text">Hey, <?php echo htmlspecialchars($_SESSION['user_lname']); ?></span>
+                     <span class="logout-text">Sign Out</span>
+                </a>
+            <?php else: ?>
+                <button class="cta-button px-5 py-3 text-white font-medium w-full mt-6 text-base tinos"><a href="sign-in.php" class="text-decoration-none">Sign In</a></button>
+            <?php endif; ?>
         </div>
     </div>
-</body>
-
+    </body>
 </html>

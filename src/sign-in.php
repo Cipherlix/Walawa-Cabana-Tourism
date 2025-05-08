@@ -10,105 +10,99 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="icon" href="./assets/images/walawa-official-logo.png">
     <style>
-
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             overflow: hidden; /* Keep background animation contained */
         }
-
-        /* Allow scrolling within the body if form gets too long on small screens */
-        @media (max-height: 800px) { /* Adjust breakpoint as needed */
-             body {
-                overflow-y: auto;
-             }
-             .min-h-screen {
-                min-height: auto; /* Allow body height to adjust */
-                padding-top: 2rem; /* Add padding when scrollable */
-                padding-bottom: 2rem;
-             }
+        @media (max-height: 800px) {
+             body { overflow-y: auto; }
+             .min-h-screen { min-height: auto; padding-top: 2rem; padding-bottom: 2rem; }
         }
-
-        .animate-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
+        .animate-in { animation: fadeIn 0.8s ease-out forwards; }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         .custom-input {
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
             background-color: var(--subtle-bg-color);
             color: var(--text-color);
-            appearance: none; /* Fix for iOS zoom issue */
-            font-size: 16px; /* Fix for iOS zoom issue */
+            appearance: none;
+            font-size: 16px;
         }
-
-        .custom-input::placeholder {
-            color: var(--text-muted-color);
-            opacity: 0.7;
-        }
-
+        .custom-input::placeholder { color: var(--text-muted-color); opacity: 0.7; }
         .custom-input:focus {
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(122, 226, 207, 0.2);
-            outline: none; /* Ensure default outline is removed */
+            outline: none;
         }
-
         .btn-primary {
             background-color: var(--button-color);
             color: var(--heading-color);
             transition: all 0.3s ease;
         }
-
         .btn-primary:hover {
             background-color: var(--accent-color);
             color: var(--bg-color);
             transform: translateY(-2px);
         }
-
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
         .form-container {
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             animation-delay: 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .bg-error {
-            background-color: rgba(248, 113, 113, 0.2);
-            color: #f87171;
-        }
-
-        .bg-success {
-            background-color: rgba(74, 222, 128, 0.2);
-            color: #4ade80;
-        }
-        #form-feedback { /* Added style for feedback message positioning */
+        .bg-error { background-color: rgba(248, 113, 113, 0.2); color: #f87171; }
+        .bg-success { background-color: rgba(74, 222, 128, 0.2); color: #4ade80; }
+        #form-feedback {
             padding: 0.75rem;
             border-radius: 0.5rem;
-            margin-bottom: 1.25rem; /* space-y-5 from form */
+            margin-bottom: 1.25rem;
             text-align: center;
-            /* Ensure it animates in too */
             animation: fadeIn 0.5s ease-out forwards;
-            opacity: 0; /* Start hidden for animation */
+            opacity: 0;
+        }
+        /* Styling for checkbox */
+        .form-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 1.25em; /* 20px */
+            height: 1.25em; /* 20px */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.25rem; /* rounded-md */
+            background-color: var(--subtle-bg-color);
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+            cursor: pointer;
+            margin-right: 0.5em; /* space between checkbox and label */
+        }
+        .form-checkbox:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        .form-checkbox:checked::after { /* Checkmark */
+            content: '';
+            position: absolute;
+            left: 0.375em; /* Adjust for centering */
+            top: 0.125em;  /* Adjust for centering */
+            width: 0.375em; /* Size of checkmark */
+            height: 0.75em; /* Size of checkmark */
+            border: solid var(--bg-color); /* Color of the checkmark */
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .link-style {
+            color: var(--text-muted-color);
+            text-decoration: none;
+        }
+        .link-style:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -170,6 +164,16 @@
                 </div>
             </div>
 
+            <div class="flex items-center justify-between animate-in" style="animation-delay: 0.55s">
+                <div class="flex items-center">
+                    <input id="remember-me" name="remember-me" type="checkbox" class="form-checkbox">
+                    <label for="remember-me" class="ml-2 block text-sm tinos" style="color: var(--text-muted-color);">Remember me</label>
+                </div>
+                <div class="text-sm">
+                    <a href="forgot-password.php" class="font-medium tinos link-style">Forgot your password?</a>
+                </div>
+            </div>
+
             <div class="pt-2 animate-in" style="animation-delay: 0.6s">
                 <button
                     type="submit"
@@ -202,138 +206,40 @@
 
     <script>
         // P5.js Water Animation (Global Scope)
-        // ... (Keep your P5.js code: particles, PARTICLE_COUNT, ripples, setup(), draw(), triggerRippleEffect(), Particle class, Ripple class, windowResized() here - exactly as it was working before)
-        let particles = [];
-        const PARTICLE_COUNT = 80;
-        let ripples = [];
-        function setup() {
-            const canvas = createCanvas(windowWidth, windowHeight);
-            canvas.parent('canvas-container');
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                particles.push(new Particle());
-            }
-            noStroke();
-        }
+        let particles = []; const PARTICLE_COUNT = 80; let ripples = [];
+        function setup() { const canvas = createCanvas(windowWidth, windowHeight); canvas.parent('canvas-container'); for (let i = 0; i < PARTICLE_COUNT; i++) { particles.push(new Particle()); } noStroke(); }
         function draw() {
-            const bgColor = color('#06202B');
-            const subtleBgColor = color('#0f3b50');
-            for (let y = 0; y < height; y++) {
-                const inter = map(y, 0, height, 0, 1);
-                const c = lerpColor(bgColor, subtleBgColor, inter);
-                stroke(c);
-                line(0, y, width, y);
-            }
-            noStroke();
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].display();
-                for (let j = i + 1; j < particles.length; j++) {
-                    const d = dist(particles[i].position.x, particles[i].position.y, particles[j].position.x, particles[j].position.y);
-                    if (d < 120) {
-                        const alpha = map(d, 0, 120, 100, 0);
-                        stroke(122, 226, 207, alpha);
-                        strokeWeight(0.5);
-                        line(particles[i].position.x, particles[i].position.y, particles[j].position.x, particles[j].position.y);
-                        noStroke();
-                    }
-                }
-            }
-            for (let i = ripples.length - 1; i >= 0; i--) {
-                ripples[i].display();
-                if (ripples[i].update()) {
-                    ripples.splice(i, 1);
-                }
-            }
-            if (frameCount % 180 === 0 || random() < 0.005) {
-                triggerRippleEffect();
-            }
+            // Use CSS variables for P5 background if available, otherwise fallback
+            const rootStyles = getComputedStyle(document.documentElement);
+            const bgColorP5 = color(rootStyles.getPropertyValue('--bg-color').trim() || '#06202B');
+            const subtleBgColorP5 = color(rootStyles.getPropertyValue('--subtle-bg-color').trim() || '#0f3b50');
+
+            for (let y = 0; y < height; y++) { const inter = map(y, 0, height, 0, 1); const c = lerpColor(bgColorP5, subtleBgColorP5, inter); stroke(c); line(0, y, width, y); }
+            noStroke(); for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].display(); for (let j = i + 1; j < particles.length; j++) { const d = dist(particles[i].position.x, particles[i].position.y, particles[j].position.x, particles[j].position.y); if (d < 120) { const alpha = map(d, 0, 120, 100, 0); stroke(122, 226, 207, alpha); strokeWeight(0.5); line(particles[i].position.x, particles[i].position.y, particles[j].position.x, particles[j].position.y); noStroke(); } } }
+            for (let i = ripples.length - 1; i >= 0; i--) { ripples[i].display(); if (ripples[i].update()) { ripples.splice(i, 1); } }
+            if ((frameCount % 180 === 0 || random() < 0.005) && document.visibilityState === 'visible') { triggerRippleEffect(); }
         }
-        function triggerRippleEffect(x = random(width), y = random(height)) {
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const ripple = new Ripple(x, y);
-                    ripples.push(ripple);
-                }, i * 200);
-            }
-        }
-        class Particle {
-             constructor() {
-                this.position = createVector(random(width), random(height));
-                this.velocity = createVector(random(-0.2, 0.2), random(-0.2, 0.2));
-                this.acceleration = createVector(0, 0);
-                this.size = random(2, 4);
-                this.color = color(122, 226, 207);
-                this.alpha = random(50, 150);
-                this.maxSpeed = 0.8;
-            }
-            update() {
-                let noise1 = noise(this.position.x * 0.01, this.position.y * 0.01, frameCount * 0.002);
-                let noise2 = noise(this.position.x * 0.01, this.position.y * 0.01, frameCount * 0.002 + 1000);
-                this.acceleration.x = map(noise1, 0, 1, -0.05, 0.05);
-                this.acceleration.y = map(noise2, 0, 1, -0.05, 0.05);
-                this.velocity.add(this.acceleration);
-                this.velocity.limit(this.maxSpeed);
-                this.position.add(this.velocity);
-                if (this.position.x < 0) this.position.x = width;
-                if (this.position.x > width) this.position.x = 0;
-                if (this.position.y < 0) this.position.y = height;
-                if (this.position.y > height) this.position.y = 0;
-                this.alpha = map(noise(frameCount * 0.01 + this.position.x), 0, 1, 50, 150);
-            }
-            display() {
-                this.color.setAlpha(this.alpha);
-                fill(this.color);
-                ellipse(this.position.x, this.position.y, this.size, this.size);
-                this.color.setAlpha(this.alpha * 0.3);
-                fill(this.color);
-                ellipse(this.position.x, this.position.y, this.size * 2, this.size * 2);
-            }
-        }
-        class Ripple {
-             constructor(x, y) {
-                this.position = createVector(x, y);
-                this.radius = 5;
-                this.maxRadius = random(80, 150);
-                this.opacity = 150;
-                this.speed = random(0.8, 1.5);
-                this.color = color(122, 226, 207);
-            }
-            update() {
-                this.radius += this.speed;
-                this.opacity = map(this.radius, 5, this.maxRadius, 150, 0);
-                return this.opacity <= 0;
-            }
-             display() {
-                noFill();
-                this.color.setAlpha(this.opacity);
-                stroke(this.color);
-                strokeWeight(1);
-                ellipse(this.position.x, this.position.y, this.radius * 2);
-            }
-        }
-        function windowResized() {
-            resizeCanvas(windowWidth, windowHeight);
-        }
+        function triggerRippleEffect(x = random(width), y = random(height)) { for (let i = 0; i < 3; i++) { setTimeout(() => { const ripple = new Ripple(x, y); ripples.push(ripple); }, i * 200); } }
+        class Particle { constructor() { this.position = createVector(random(width), random(height)); this.velocity = createVector(random(-0.2, 0.2), random(-0.2, 0.2)); this.acceleration = createVector(0, 0); this.size = random(2, 4); this.color = color(122, 226, 207); this.alpha = random(50, 150); this.maxSpeed = 0.8; } update() { let noise1 = noise(this.position.x * 0.01, this.position.y * 0.01, frameCount * 0.002); let noise2 = noise(this.position.x * 0.01, this.position.y * 0.01, frameCount * 0.002 + 1000); this.acceleration.x = map(noise1, 0, 1, -0.05, 0.05); this.acceleration.y = map(noise2, 0, 1, -0.05, 0.05); this.velocity.add(this.acceleration); this.velocity.limit(this.maxSpeed); this.position.add(this.velocity); if (this.position.x < 0) this.position.x = width; if (this.position.x > width) this.position.x = 0; if (this.position.y < 0) this.position.y = height; if (this.position.y > height) this.position.y = 0; this.alpha = map(noise(frameCount * 0.01 + this.position.x), 0, 1, 50, 150); } display() { this.color.setAlpha(this.alpha); fill(this.color); ellipse(this.position.x, this.position.y, this.size, this.size); this.color.setAlpha(this.alpha * 0.3); fill(this.color); ellipse(this.position.x, this.position.y, this.size * 2, this.size * 2); } }
+        class Ripple { constructor(x, y) { this.position = createVector(x, y); this.radius = 5; this.maxRadius = random(80, 150); this.opacity = 150; this.speed = random(0.8, 1.5); this.color = color(122, 226, 207); } update() { this.radius += this.speed; this.opacity = map(this.radius, 5, this.maxRadius, 150, 0); return this.opacity <= 0; } display() { noFill(); this.color.setAlpha(this.opacity); stroke(this.color); strokeWeight(1); ellipse(this.position.x, this.position.y, this.radius * 2); } }
+        function windowResized() { resizeCanvas(windowWidth, windowHeight); }
         // End of P5.js Code
 
-
-        // Form Interaction Logic (Scoped within DOMContentLoaded)
+        // Form Interaction Logic
         document.addEventListener('DOMContentLoaded', function() {
             const signinForm = document.getElementById('signin-form');
             const formFeedback = document.getElementById('form-feedback');
             const buttonText = document.getElementById('button-text');
             const buttonSpinner = document.getElementById('button-spinner');
-            const formContainer = document.querySelector('.form-container'); // For P5 ripple effect
+            const formContainer = document.querySelector('.form-container');
+            const rememberMeCheckbox = document.getElementById('remember-me'); // Get checkbox
 
-            // --- Password Toggle Functionality ---
             function setupPasswordToggle(toggleButtonId, passwordFieldId) {
                 const toggleButton = document.getElementById(toggleButtonId);
                 const passwordField = document.getElementById(passwordFieldId);
                 const eyeIcon = toggleButton.querySelector('.icon-eye');
                 const eyeSlashIcon = toggleButton.querySelector('.icon-eye-slash');
-
                 if (!toggleButton || !passwordField || !eyeIcon || !eyeSlashIcon) return;
-
                  toggleButton.addEventListener('click', function() {
                     const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
                     passwordField.setAttribute('type', type);
@@ -343,101 +249,87 @@
             }
             setupPasswordToggle('toggle-password', 'password');
 
-
-            // --- Helper Function to Show Feedback ---
             function showFeedback(message, type, permanent = false) {
                 formFeedback.textContent = message;
-                formFeedback.className = 'text-center py-2 rounded text-sm'; // Reset classes
-                formFeedback.classList.add('animate-in'); // Re-apply animation class
+                formFeedback.className = 'text-center py-2 rounded text-sm';
+                formFeedback.classList.add('animate-in');
                 if (type === 'error') {
                     formFeedback.classList.add('bg-error');
-                } else { // success
+                } else {
                     formFeedback.classList.add('bg-success');
                 }
                 formFeedback.classList.remove('hidden');
-
-                // Ensure button text is visible and spinner is hidden if it's an error display
                 if (type === 'error') {
                     buttonText.classList.remove('hidden');
                     buttonSpinner.classList.add('hidden');
                 }
-
                 if (!permanent) {
-                    setTimeout(() => {
-                       formFeedback.classList.add('hidden');
-                    }, 5000); // Hide after 5 seconds if not permanent
+                    setTimeout(() => { formFeedback.classList.add('hidden'); }, 5000);
                 }
             }
 
-            // --- Email Validation Function (Client-side) ---
             function validateEmail(email) {
                 const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(String(email).toLowerCase());
             }
 
-            // --- P5 Ripple on Form Container Click (Optional visual flair) ---
              if (formContainer && typeof triggerRippleEffect === 'function') {
                 formContainer.addEventListener('click', function(e) {
-                    if (e.target === formContainer) { // Click on container itself, not inputs/buttons
-                         triggerRippleEffect(e.clientX, e.clientY); // Calls global P5 function
-                    }
+                    if (e.target === formContainer) { triggerRippleEffect(e.clientX, e.clientY); }
                 });
             }
 
-
-            // --- Form Submission Handling ---
             if (signinForm) {
                 signinForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-
                     const emailInput = document.getElementById('email');
                     const passwordInput = document.getElementById('password');
                     const email = emailInput.value.trim();
-                    const password = passwordInput.value;
+                    const password = passwordInput.value; // No trim on password for submission
 
-                    // Basic client-side validation (server-side is primary)
                     if (!email || !validateEmail(email)) {
                         showFeedback('Please enter a valid email address.', 'error');
-                        emailInput.focus();
-                        return;
+                        emailInput.focus(); return;
                     }
                     if (!password) {
                         showFeedback('Please enter your password.', 'error');
-                        passwordInput.focus();
-                        return;
+                        passwordInput.focus(); return;
                     }
 
                     buttonText.classList.add('hidden');
                     buttonSpinner.classList.remove('hidden');
-                    formFeedback.classList.add('hidden'); // Hide previous messages
+                    formFeedback.classList.add('hidden');
 
                     const formData = new FormData();
                     formData.append('email', email);
                     formData.append('password', password);
+                    if (rememberMeCheckbox.checked) { // Add remember me status
+                        formData.append('remember-me', 'on');
+                    }
 
                     const request = new XMLHttpRequest();
                     request.open('POST', 'processes/sign-in-process.php', true);
-                    
+
                     request.onreadystatechange = function() {
                         if (request.readyState === XMLHttpRequest.DONE) {
                             buttonText.classList.remove('hidden');
                             buttonSpinner.classList.add('hidden');
-
                             if (request.status === 200) {
                                 try {
                                     const response = JSON.parse(request.responseText);
                                     if (response.status === 'success') {
-                                        showFeedback(response.message, 'success', true); // Permanent success message
+                                        showFeedback(response.message, 'success', true);
+                                        // Use redirect URL from response if provided, otherwise default to index.php
+                                        const redirectUrl = response.redirect || 'index.php';
                                         setTimeout(() => {
-                                            window.location.href = 'index.php'; // Redirect to index.php
-                                        }, 1500); // Delay for user to see message
+                                            window.location.href = redirectUrl;
+                                        }, 1500);
                                     } else {
                                         showFeedback(response.message || 'An unknown error occurred.', 'error');
                                     }
                                 } catch (err) {
                                     showFeedback('Error processing server response. Please try again.', 'error');
-                                    console.error("JSON Parse Error:", err);
-                                    console.error("Response Text:", request.responseText);
+                                    console.error("JSON Parse Error:", err, "\nResponse Text:", request.responseText);
                                 }
                             } else {
                                 showFeedback('Server error: ' + request.status + '. Please try again later.', 'error');
@@ -446,6 +338,25 @@
                     };
                     request.send(formData);
                 });
+            }
+
+            // Helper function to get cookie
+            function getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for(let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            // Check for "Remember Me" cookie on page load
+            const rememberedEmail = getCookie("remember_user_email"); // Changed cookie name for clarity
+            if (rememberedEmail) {
+                document.getElementById("email").value = rememberedEmail;
+                rememberMeCheckbox.checked = true;
             }
         });
     </script>

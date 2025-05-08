@@ -22,7 +22,8 @@
                 <a href="#" aria-label="Instagram" class="text-text-muted-color hover:text-accent-color transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"></svg></a>
                 <a href="#" aria-label="TripAdvisor" class="text-text-muted-color hover:text-accent-color transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"></svg></a>
             </div>
-            <p class="text-xs text-opacity-50 text-text-color">&copy; <?php echo date("Y"); ?> . All Rights Reserved.</p>
+            <p class="text-xs text-opacity-50 text-text-color">&copy; <?php echo date("Y"); ?> Walawa Cabana. All Rights Reserved.</p>
+            <p class="text-xs text-opacity-50 text-text-color">Designed by <a href="#" class="text-accent-color hover:underline">Cipherlix (Pvt) Ltd.</a></p>
         </div>
     </footer>
 </body>
