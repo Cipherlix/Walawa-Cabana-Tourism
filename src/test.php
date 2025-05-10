@@ -1,49 +1,57 @@
-<section id="gallery" class="py-20 relative overflow-hidden">
-    <div class="container mx-auto px-4 gallery-content-container relative z-10">
-        <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-heading-color">Visual Escapes</h2>
+<div style="font-family: Arial, sans-serif; background-color: #06202b; padding: 20px; margin: 0;">
+    <div style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #0a2a3a; border-radius: 10px; overflow: hidden; box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);">
 
-        <div x-data="{
-            activeSlide: 0,
-            slides: [],
-            init() {
-                this.slides = Array.from(document.querySelectorAll('.gallery-slide'));
-            },
-            next() {
-                this.activeSlide = (this.activeSlide + 1) % this.slides.length;
-            },
-            prev() {
-                this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length;
-            }
-        }" class="relative overflow-hidden">
+        <div style="background-color: #0f3b50; padding: 20px 30px; text-align: center;">
+            <h1 style="font-size: 26px; color: #ffffff; margin: 0;">Booking Confirmation</h1>
+        </div>
 
-            <!-- Slides -->
-            <div class="flex transition-transform duration-500 ease-in-out"
-                 :style="'transform: translateX(-' + activeSlide * 100 + '%)'">
-                <?php
-                include 'connection.php';
-                $query = "SELECT img_url, img_alt, label FROM gallery_images";
-                $result = Database::iud($query);
+        <div style="padding: 20px 30px; background-color: #0a2a3a; color: #f5eedd;">
+            <p style="font-size: 18px; color: #ffffff; margin-top: 0; margin-bottom: 20px;">
+                Hi $fname $lname,
+            </p>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                Thank you for your booking! We are pleased to confirm the details of your reservation:
+            </p>
 
-                if ($result && $result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<div class="gallery-slide min-w-full relative">';
-                        echo '<img src="' . htmlspecialchars($row['img_url']) . '" alt="' . htmlspecialchars($row['img_alt']) . '" class="w-full h-64 object-cover rounded-lg shadow-md">';
-                        echo '<span class="absolute bottom-3 left-3 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">' . htmlspecialchars($row['label']) . '</span>';
-                        echo '</div>';
-                    }
-                } else {
-                    echo '<div class="gallery-slide min-w-full text-center">No images available.</div>';
-                }
-                ?>
+            <div style="margin-bottom: 25px; padding: 15px; background-color: #0f3b50; border-radius: 8px;">
+                <h2 style="font-size: 20px; color: #7ae2cf; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #06202b; padding-bottom: 10px;">Your Booking Details:</h2>
+                <p style="font-size: 16px; margin: 8px 0;"><strong>Booking Code:</strong> $bookingCode</p>
+                <p style="font-size: 16px; margin: 8px 0;"><strong>Package Name:</strong> $package_name</p>
+                <p style="font-size: 16px; margin: 8px 0;"><strong>Booking Date:</strong> $bookingDate</p>
+                <p style="font-size: 16px; margin: 8px 0;"><strong>Check-in Date:</strong> $checkin</p>
+                <p style="font-size: 16px; margin: 8px 0;"><strong>Check-out Date:</strong> $checkout</p>
+                <p style="font-size: 16px; margin: 8px 0;"><strong>Number of Guests:</strong> $guests</p>
+                <p style="font-size: 16px; margin: 8px 0;"><strong>Email:</strong> $email</p>
+                <p style="font-size: 16px; margin: 8px 0;"><strong>Payment Status:</strong> <strong style="color: #7ae2cf;">$paymentStatus</strong></p>
             </div>
 
-            <!-- Navigation buttons -->
-            <button @click="prev" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white px-3 py-2 rounded-r">
-                &#10094;
-            </button>
-            <button @click="next" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white px-3 py-2 rounded-l">
-                &#10095;
-            </button>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+                If you have any questions or need to make changes to your booking, please do not hesitate to contact us.
+            </p>
+
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="[YourBookingManagementLink]"
+                    style="background-color: #077a7d; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 5px; display: inline-block; font-size: 16px; font-weight: bold;">
+                    View Your Booking
+                </a>
+            </p>
+
+            <p style="font-size: 16px; line-height: 1.6;">
+                We look forward to welcoming you!
+                <br><br>
+                Sincerely,
+                <br>
+                <strong style="color: #ffffff;">The Walawa Cabana Team</strong>
+            </p>
+        </div>
+
+        <div style="background-color: #0f3b50; padding: 15px 30px; text-align: center;">
+            <p style="font-size: 12px; color: #a0aec0; margin: 0;">
+                &copy; <?php echo date("Y"); ?> Walawa Cabana Lake Resort. All rights reserved.
+            </p>
+            <p style="font-size: 12px; color: #a0aec0; margin: 5px 0 0 0;">
+                Cipherlix (Pvt) Ltd
+            </p>
         </div>
     </div>
-</section>
+</div>
