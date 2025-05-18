@@ -67,7 +67,7 @@ Database::getDatabaseConnection(); // Initialize connection
         /* text-green-700 bg-green-100 border-green-400 */
         .feedback-error {
             color: #C53030;
-            background-color: #FED7D7;
+            background-color:rgb(255, 113, 113);
             border: 1px solid #FEB2B2;
         }
 

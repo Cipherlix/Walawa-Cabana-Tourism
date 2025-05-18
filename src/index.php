@@ -182,69 +182,7 @@
 
     <?php include "reviews.php"?>
 
-    <section id="contact" class="py-20 section-subtle-bg">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-heading-color">Connect With Us</h2>
-            <div class="flex flex-col md:flex-row gap-8 md:gap-12">
-                <div class="md:w-1/2">
-                    <h3 class="text-2xl font-semibold mb-6 text-heading-color">Send Us a Message</h3>
-                    <form id="contactForm" class="space-y-6" novalidate>
-                        <div>
-                            <label for="contactName" class="block text-text-color mb-2 font-medium">Your Name</label>
-                            <input type="text" id="contactName" name="contactName" class="form-input" required placeholder="Full Name">
-                            <p class="error-message hidden" id="contactNameError">Please enter your name.</p>
-                        </div>
-                        <div>
-                            <label for="contactEmail" class="block text-text-color mb-2 font-medium">Email Address</label>
-                            <input type="email" id="contactEmail" name="contactEmail" class="form-input" required placeholder="your.email@example.com">
-                            <p class="error-message hidden" id="contactEmailError">Please enter a valid email.</p>
-                        </div>
-                        <div>
-                            <label for="contactSubject" class="block text-text-color mb-2 font-medium">Subject</label>
-                            <input type="text" id="contactSubject" name="contactSubject" class="form-input" required placeholder="Inquiry Subject">
-                            <p class="error-message hidden" id="contactSubjectError">Please enter a subject.</p>
-                        </div>
-                        <div>
-                            <label for="contactMessage" class="block text-text-color mb-2 font-medium">Message</label>
-                            <textarea id="contactMessage" name="contactMessage" rows="5" class="form-input" required placeholder="Your message here..."></textarea>
-                            <p class="error-message hidden" id="contactMessageError">Please enter your message.</p>
-                        </div>
-                        <div class="text-left">
-                            <button type="submit" class="cta-button px-8 py-3 text-lg font-medium">Send Message</button>
-                        </div>
-                        <div id="contactFormSuccessMessage" class="text-green-400 font-medium hidden mt-4"> Message sent! We'll reply soon. </div>
-                        <div id="contactFormErrorMessage" class="text-red-400 font-medium hidden mt-4"> Error sending message. Please try again. </div>
-                    </form>
-                </div>
-                <div class="md:w-1/2">
-                    <h3 class="text-2xl font-semibold mb-6 text-heading-color">Resort Information</h3>
-                    <div class="space-y-4 text-lg mb-8">
-                        <p><strong>Address:</strong> Lakefront Road, Walawa National Park Entrance, Sri Lanka</p>
-                        <p><strong>Phone:</strong> <a href="tel:+94112345678" class="text-accent-color hover:underline">+94 (11) 234 5678</a></p>
-                        <p><strong>Email:</strong> <a href="mailto:reservations@walawacabana.lk" class="text-accent-color hover:underline">reservations@walawacabana.lk</a></p>
-                    </div>
-                    <h4 class="text-xl font-semibold mb-4 text-heading-color">Follow Us</h4>
-                    <div class="flex space-x-4 mb-8">
-                        <a href="#" aria-label="Facebook" class="text-text-muted-color hover:text-accent-color transition-colors"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"></svg></a>
-                        <a href="#" aria-label="Instagram" class="text-text-muted-color hover:text-accent-color transition-colors"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"></svg></a>
-                        <a href="#" aria-label="TripAdvisor" class="text-text-muted-color hover:text-accent-color transition-colors"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"></svg></a>
-                    </div>
-                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-md">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6668.166307038409!2d80.92027370417402!3d6.404899050572681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae403002215f037%3A0x3913509dd245a92a!2sHabaraluwewa%20nanathotupola!5e0!3m2!1sen!2slk!4v1746432608058!5m2!1sen!2slk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                            width="100%"
-                            height="350" /* Increased height */
-                            style="border:0; filter: grayscale(80%) invert(90%);" /* Basic dark theme filter */
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            title="Resort Location Map">
-                        </iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php include "contact.php"?>
 
     <?php include('footer.php') ?>
     <script src="./js/script.js"></script>

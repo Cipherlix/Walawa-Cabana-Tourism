@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,17 +14,38 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            overflow: hidden; /* Keep background animation contained */
+            overflow: hidden;
+            /* Keep background animation contained */
         }
+
         @media (max-height: 800px) {
-             body { overflow-y: auto; }
-             .min-h-screen { min-height: auto; padding-top: 2rem; padding-bottom: 2rem; }
+            body {
+                overflow-y: auto;
+            }
+
+            .min-h-screen {
+                min-height: auto;
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
         }
-        .animate-in { animation: fadeIn 0.8s ease-out forwards; }
+
+        .animate-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .custom-input {
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -32,31 +54,56 @@
             appearance: none;
             font-size: 16px;
         }
-        .custom-input::placeholder { color: var(--text-muted-color); opacity: 0.7; }
+
+        .custom-input::placeholder {
+            color: var(--text-muted-color);
+            opacity: 0.7;
+        }
+
         .custom-input:focus {
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(122, 226, 207, 0.2);
             outline: none;
         }
+
         .btn-primary {
             background-color: var(--button-color);
             color: var(--heading-color);
             transition: all 0.3s ease;
         }
+
         .btn-primary:hover {
             background-color: var(--accent-color);
             color: var(--bg-color);
             transform: translateY(-2px);
         }
-        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
         .form-container {
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             animation-delay: 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .bg-error { background-color: rgba(248, 113, 113, 0.2); color: #f87171; }
-        .bg-success { background-color: rgba(74, 222, 128, 0.2); color: #4ade80; }
+
+        .bg-error {
+            background-color: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+        }
+
+        .bg-success {
+            background-color: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
         #form-feedback {
             padding: 0.75rem;
             border-radius: 0.5rem;
@@ -65,47 +112,63 @@
             animation: fadeIn 0.5s ease-out forwards;
             opacity: 0;
         }
+
         /* Styling for checkbox */
         .form-checkbox {
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            width: 1.25em; /* 20px */
-            height: 1.25em; /* 20px */
+            width: 1.25em;
+            /* 20px */
+            height: 1.25em;
+            /* 20px */
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 0.25rem; /* rounded-md */
+            border-radius: 0.25rem;
+            /* rounded-md */
             background-color: var(--subtle-bg-color);
             display: inline-block;
             vertical-align: middle;
             position: relative;
             cursor: pointer;
-            margin-right: 0.5em; /* space between checkbox and label */
+            margin-right: 0.5em;
+            /* space between checkbox and label */
         }
+
         .form-checkbox:checked {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
         }
-        .form-checkbox:checked::after { /* Checkmark */
+
+        .form-checkbox:checked::after {
+            /* Checkmark */
             content: '';
             position: absolute;
-            left: 0.375em; /* Adjust for centering */
-            top: 0.125em;  /* Adjust for centering */
-            width: 0.375em; /* Size of checkmark */
-            height: 0.75em; /* Size of checkmark */
-            border: solid var(--bg-color); /* Color of the checkmark */
+            left: 0.375em;
+            /* Adjust for centering */
+            top: 0.125em;
+            /* Adjust for centering */
+            width: 0.375em;
+            /* Size of checkmark */
+            height: 0.75em;
+            /* Size of checkmark */
+            border: solid var(--bg-color);
+            /* Color of the checkmark */
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
+
         .link-style {
             color: var(--text-muted-color);
             text-decoration: none;
         }
+
         .link-style:hover {
             color: var(--accent-color);
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body class="min-h-screen flex items-center justify-center px-4 py-8">
     <div id="canvas-container"></div>
 
@@ -130,8 +193,7 @@
                     name="email"
                     required
                     class="custom-input w-full px-4 py-3 rounded-lg focus:outline-none tinos"
-                    placeholder="your.email@example.com"
-                >
+                    placeholder="your.email@example.com">
             </div>
 
             <div class="animate-in" style="animation-delay: 0.5s">
@@ -143,15 +205,13 @@
                         name="password"
                         required
                         class="custom-input w-full px-4 py-3 rounded-lg focus:outline-none pr-10 tinos"
-                        placeholder="••••••••"
-                    >
+                        placeholder="••••••••">
                     <button
                         type="button"
                         id="toggle-password"
                         class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200 focus:outline-none "
                         style="color: var(--text-muted-color);"
-                        aria-label="Toggle password visibility"
-                    >
+                        aria-label="Toggle password visibility">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 icon-eye" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                             <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
@@ -177,8 +237,7 @@
             <div class="pt-2 animate-in" style="animation-delay: 0.6s">
                 <button
                     type="submit"
-                    class="btn-primary w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium focus:outline-none tinos"
-                >
+                    class="btn-primary w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium focus:outline-none tinos">
                     <span id="button-text">Sign In</span>
                     <span id="button-spinner" class="hidden">
                         <svg class="animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -201,28 +260,133 @@
 
         <div class="mt-6 text-center text-xs animate-in tagesschrift" style="animation-delay: 0.9s; color: var(--text-muted-color);">
             <p>We're glad to see you again!</p>
+            <div class="text-sm mt-4">
+                <a href="admin-sign-in.php" class="font-medium tinos link-style text-center ">Are You Admin User?</a>
+            </div>
         </div>
+
     </div>
 
     <script>
         // P5.js Water Animation (Global Scope)
-        let particles = []; const PARTICLE_COUNT = 80; let ripples = [];
-        function setup() { const canvas = createCanvas(windowWidth, windowHeight); canvas.parent('canvas-container'); for (let i = 0; i < PARTICLE_COUNT; i++) { particles.push(new Particle()); } noStroke(); }
+        let particles = [];
+        const PARTICLE_COUNT = 80;
+        let ripples = [];
+
+        function setup() {
+            const canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+            noStroke();
+        }
+
         function draw() {
             // Use CSS variables for P5 background if available, otherwise fallback
             const rootStyles = getComputedStyle(document.documentElement);
             const bgColorP5 = color(rootStyles.getPropertyValue('--bg-color').trim() || '#06202B');
             const subtleBgColorP5 = color(rootStyles.getPropertyValue('--subtle-bg-color').trim() || '#0f3b50');
 
-            for (let y = 0; y < height; y++) { const inter = map(y, 0, height, 0, 1); const c = lerpColor(bgColorP5, subtleBgColorP5, inter); stroke(c); line(0, y, width, y); }
-            noStroke(); for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].display(); for (let j = i + 1; j < particles.length; j++) { const d = dist(particles[i].position.x, particles[i].position.y, particles[j].position.x, particles[j].position.y); if (d < 120) { const alpha = map(d, 0, 120, 100, 0); stroke(122, 226, 207, alpha); strokeWeight(0.5); line(particles[i].position.x, particles[i].position.y, particles[j].position.x, particles[j].position.y); noStroke(); } } }
-            for (let i = ripples.length - 1; i >= 0; i--) { ripples[i].display(); if (ripples[i].update()) { ripples.splice(i, 1); } }
-            if ((frameCount % 180 === 0 || random() < 0.005) && document.visibilityState === 'visible') { triggerRippleEffect(); }
+            for (let y = 0; y < height; y++) {
+                const inter = map(y, 0, height, 0, 1);
+                const c = lerpColor(bgColorP5, subtleBgColorP5, inter);
+                stroke(c);
+                line(0, y, width, y);
+            }
+            noStroke();
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].display();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const d = dist(particles[i].position.x, particles[i].position.y, particles[j].position.x, particles[j].position.y);
+                    if (d < 120) {
+                        const alpha = map(d, 0, 120, 100, 0);
+                        stroke(122, 226, 207, alpha);
+                        strokeWeight(0.5);
+                        line(particles[i].position.x, particles[i].position.y, particles[j].position.x, particles[j].position.y);
+                        noStroke();
+                    }
+                }
+            }
+            for (let i = ripples.length - 1; i >= 0; i--) {
+                ripples[i].display();
+                if (ripples[i].update()) {
+                    ripples.splice(i, 1);
+                }
+            }
+            if ((frameCount % 180 === 0 || random() < 0.005) && document.visibilityState === 'visible') {
+                triggerRippleEffect();
+            }
         }
-        function triggerRippleEffect(x = random(width), y = random(height)) { for (let i = 0; i < 3; i++) { setTimeout(() => { const ripple = new Ripple(x, y); ripples.push(ripple); }, i * 200); } }
-        class Particle { constructor() { this.position = createVector(random(width), random(height)); this.velocity = createVector(random(-0.2, 0.2), random(-0.2, 0.2)); this.acceleration = createVector(0, 0); this.size = random(2, 4); this.color = color(122, 226, 207); this.alpha = random(50, 150); this.maxSpeed = 0.8; } update() { let noise1 = noise(this.position.x * 0.01, this.position.y * 0.01, frameCount * 0.002); let noise2 = noise(this.position.x * 0.01, this.position.y * 0.01, frameCount * 0.002 + 1000); this.acceleration.x = map(noise1, 0, 1, -0.05, 0.05); this.acceleration.y = map(noise2, 0, 1, -0.05, 0.05); this.velocity.add(this.acceleration); this.velocity.limit(this.maxSpeed); this.position.add(this.velocity); if (this.position.x < 0) this.position.x = width; if (this.position.x > width) this.position.x = 0; if (this.position.y < 0) this.position.y = height; if (this.position.y > height) this.position.y = 0; this.alpha = map(noise(frameCount * 0.01 + this.position.x), 0, 1, 50, 150); } display() { this.color.setAlpha(this.alpha); fill(this.color); ellipse(this.position.x, this.position.y, this.size, this.size); this.color.setAlpha(this.alpha * 0.3); fill(this.color); ellipse(this.position.x, this.position.y, this.size * 2, this.size * 2); } }
-        class Ripple { constructor(x, y) { this.position = createVector(x, y); this.radius = 5; this.maxRadius = random(80, 150); this.opacity = 150; this.speed = random(0.8, 1.5); this.color = color(122, 226, 207); } update() { this.radius += this.speed; this.opacity = map(this.radius, 5, this.maxRadius, 150, 0); return this.opacity <= 0; } display() { noFill(); this.color.setAlpha(this.opacity); stroke(this.color); strokeWeight(1); ellipse(this.position.x, this.position.y, this.radius * 2); } }
-        function windowResized() { resizeCanvas(windowWidth, windowHeight); }
+
+        function triggerRippleEffect(x = random(width), y = random(height)) {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const ripple = new Ripple(x, y);
+                    ripples.push(ripple);
+                }, i * 200);
+            }
+        }
+        class Particle {
+            constructor() {
+                this.position = createVector(random(width), random(height));
+                this.velocity = createVector(random(-0.2, 0.2), random(-0.2, 0.2));
+                this.acceleration = createVector(0, 0);
+                this.size = random(2, 4);
+                this.color = color(122, 226, 207);
+                this.alpha = random(50, 150);
+                this.maxSpeed = 0.8;
+            }
+            update() {
+                let noise1 = noise(this.position.x * 0.01, this.position.y * 0.01, frameCount * 0.002);
+                let noise2 = noise(this.position.x * 0.01, this.position.y * 0.01, frameCount * 0.002 + 1000);
+                this.acceleration.x = map(noise1, 0, 1, -0.05, 0.05);
+                this.acceleration.y = map(noise2, 0, 1, -0.05, 0.05);
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(this.maxSpeed);
+                this.position.add(this.velocity);
+                if (this.position.x < 0) this.position.x = width;
+                if (this.position.x > width) this.position.x = 0;
+                if (this.position.y < 0) this.position.y = height;
+                if (this.position.y > height) this.position.y = 0;
+                this.alpha = map(noise(frameCount * 0.01 + this.position.x), 0, 1, 50, 150);
+            }
+            display() {
+                this.color.setAlpha(this.alpha);
+                fill(this.color);
+                ellipse(this.position.x, this.position.y, this.size, this.size);
+                this.color.setAlpha(this.alpha * 0.3);
+                fill(this.color);
+                ellipse(this.position.x, this.position.y, this.size * 2, this.size * 2);
+            }
+        }
+        class Ripple {
+            constructor(x, y) {
+                this.position = createVector(x, y);
+                this.radius = 5;
+                this.maxRadius = random(80, 150);
+                this.opacity = 150;
+                this.speed = random(0.8, 1.5);
+                this.color = color(122, 226, 207);
+            }
+            update() {
+                this.radius += this.speed;
+                this.opacity = map(this.radius, 5, this.maxRadius, 150, 0);
+                return this.opacity <= 0;
+            }
+            display() {
+                noFill();
+                this.color.setAlpha(this.opacity);
+                stroke(this.color);
+                strokeWeight(1);
+                ellipse(this.position.x, this.position.y, this.radius * 2);
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
         // End of P5.js Code
 
         // Form Interaction Logic
@@ -240,7 +404,7 @@
                 const eyeIcon = toggleButton.querySelector('.icon-eye');
                 const eyeSlashIcon = toggleButton.querySelector('.icon-eye-slash');
                 if (!toggleButton || !passwordField || !eyeIcon || !eyeSlashIcon) return;
-                 toggleButton.addEventListener('click', function() {
+                toggleButton.addEventListener('click', function() {
                     const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
                     passwordField.setAttribute('type', type);
                     eyeIcon.classList.toggle('hidden', type === 'text');
@@ -264,7 +428,9 @@
                     buttonSpinner.classList.add('hidden');
                 }
                 if (!permanent) {
-                    setTimeout(() => { formFeedback.classList.add('hidden'); }, 5000);
+                    setTimeout(() => {
+                        formFeedback.classList.add('hidden');
+                    }, 5000);
                 }
             }
 
@@ -273,9 +439,11 @@
                 return re.test(String(email).toLowerCase());
             }
 
-             if (formContainer && typeof triggerRippleEffect === 'function') {
+            if (formContainer && typeof triggerRippleEffect === 'function') {
                 formContainer.addEventListener('click', function(e) {
-                    if (e.target === formContainer) { triggerRippleEffect(e.clientX, e.clientY); }
+                    if (e.target === formContainer) {
+                        triggerRippleEffect(e.clientX, e.clientY);
+                    }
                 });
             }
 
@@ -289,11 +457,13 @@
 
                     if (!email || !validateEmail(email)) {
                         showFeedback('Please enter a valid email address.', 'error');
-                        emailInput.focus(); return;
+                        emailInput.focus();
+                        return;
                     }
                     if (!password) {
                         showFeedback('Please enter your password.', 'error');
-                        passwordInput.focus(); return;
+                        passwordInput.focus();
+                        return;
                     }
 
                     buttonText.classList.add('hidden');
@@ -344,7 +514,7 @@
             function getCookie(name) {
                 const nameEQ = name + "=";
                 const ca = document.cookie.split(';');
-                for(let i = 0; i < ca.length; i++) {
+                for (let i = 0; i < ca.length; i++) {
                     let c = ca[i];
                     while (c.charAt(0) === ' ') c = c.substring(1, c.length);
                     if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
@@ -361,4 +531,5 @@
         });
     </script>
 </body>
+
 </html>
